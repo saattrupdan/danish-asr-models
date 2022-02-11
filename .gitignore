@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Data files
+**/*.json
+alvenir-wav2vec2-base-da-cv8/
