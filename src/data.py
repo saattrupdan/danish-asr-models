@@ -215,6 +215,7 @@ class AudioDataset:
 
         # Preprocess labels
         with self.processor.as_target_processor():
+            breakpoint()
             examples['labels'] = (self.processor(examples['sentence'])
                                       .input_values)
 
