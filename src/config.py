@@ -8,18 +8,6 @@ class Config(BaseModel):
     '''Config class that carries all the hyperparameters needed for training.
 
     Args:
-        attention_dropout (float, optional):
-            The dropout rate for the attention layer. Defaults to 0.0.
-        hidden_dropout (float, optional):
-            The dropout rate for the hidden layer. Defaults to 0.0.
-        feat_proj_dropout (float, optional):
-            The dropout rate for the feature projection layer. Defaults to 0.0.
-        mask_time_prob (float, optional):
-            The probability of masking the time dimension. Defaults to 0.05.
-        layerdrop (float, optional):
-            The dropout rate for the layers. Defaults to 0.0.
-        ctc_loss_reduction (str, optional):
-            The reduction to use for the CTC loss. Defaults to 'mean'.
         dataset_id (str, optional):
             The id of the dataset to finetune on. Defaults to
             'mozilla-foundation/common_voice_8_0'.
@@ -39,6 +27,18 @@ class Config(BaseModel):
             the train dataset. If a validation set is not available either,
             then both a validation and test set will be created from the train
             dataset. Defaults to 'test'.
+        attention_dropout (float, optional):
+            The dropout rate for the attention layer. Defaults to 0.0.
+        hidden_dropout (float, optional):
+            The dropout rate for the hidden layer. Defaults to 0.0.
+        feat_proj_dropout (float, optional):
+            The dropout rate for the feature projection layer. Defaults to 0.0.
+        mask_time_prob (float, optional):
+            The probability of masking the time dimension. Defaults to 0.05.
+        layerdrop (float, optional):
+            The dropout rate for the layers. Defaults to 0.0.
+        ctc_loss_reduction (str, optional):
+            The reduction to use for the CTC loss. Defaults to 'mean'.
         batch_size (int, optional):
             The batch size for training. Defaults to 16.
         gradient_accumulation_steps (int, optional):
@@ -56,14 +56,6 @@ class Config(BaseModel):
         push_to_hub (bool, optional):
             Whether to push the model to the hub. Defaults to True.
     '''
-    # Model hyperparameters
-    attention_dropout: float = 0.0
-    hidden_dropout: float = 0.0
-    feat_proj_dropout: float = 0.0
-    mask_time_prob: float = 0.05
-    layerdrop: float = 0.0
-    ctc_loss_reduction: str = 'sum'
-
     # Dataset parameters
     dataset_id: str = 'mozilla-foundation/common_voice_8_0'
     dataset_subset: Optional[str] = 'da'
@@ -71,6 +63,14 @@ class Config(BaseModel):
     train_name: str = 'train'
     validation_name: Optional[str] = 'validation'
     test_name: Optional[str] = 'test'
+
+    # Model hyperparameters
+    attention_dropout: float = 0.0
+    hidden_dropout: float = 0.0
+    feat_proj_dropout: float = 0.0
+    mask_time_prob: float = 0.05
+    layerdrop: float = 0.0
+    ctc_loss_reduction: str = 'sum'
 
     # Training hyperparameters
     batch_size: int = 16
