@@ -36,7 +36,6 @@ def clean_texts(examples: dict) -> dict:
     examples['text'] = re.sub(r' +', ' ', examples['text'])
 
 
-
 def train_ngram_model():
     '''Trains an ngram language model'''
 
@@ -48,3 +47,7 @@ def train_ngram_model():
 
     # Push the preprocessed dataset to the HF Hub
     dataset.push_to_hub('DDSC/reddit-da-asr-preprocessed')
+
+
+if __name__ == '__main__':
+    train_ngram_model()
