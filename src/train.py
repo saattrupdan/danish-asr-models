@@ -21,6 +21,8 @@ def train(config: Optional[Union[dict, Config]] = None):
     # parameters
     if config is None:
         config = Config()
+
+    # If a dict is provided, create a config object from the dict
     elif isinstance(config, dict):
         config = Config(**config)
 
