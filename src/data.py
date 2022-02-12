@@ -49,26 +49,6 @@ class AudioDataset:
         # Load the dataset
         self.train, self.val, self.test = self._load_dataset()
 
-        # Intialise the tokenizer
-        self.tokenizer = Wav2Vec2CTCTokenizer(vocab_file='vocab.json',
-                                              unk_token='<unk>',
-                                              pad_token='<pad>',
-                                              bos_token='<s>',
-                                              eos_token='</s>',
-                                              word_delimiter_token='|',
-                                              do_lower_case=True)
-
-        # Initialise the feature extractor
-        self.extractor = Wav2Vec2FeatureExtractor(feature_size=1,
-                                                  sampling_rate=sampling_rate,
-                                                  padding_value=0.0,
-                                                  do_normalize=True,
-                                                  return_attention_mask=True)
-
-        # Initialise the processor, which wraps the tokenizer and the extractor
-        self.processor = Wav2Vec2Processor(feature_extractor=self.extractor,
-                                           tokenizer=self.tokenizer)
-
     def preprocess(self):
         '''Preprocess the dataset'''
 
@@ -86,6 +66,9 @@ class AudioDataset:
         # Extract and dump the vocabulary from the training dataset
         self._dump_vocabulary(self.train)
 
+        # Intitialise the preprocessor
+        self.initialise_preprocessor()
+
         # Preprocess the datasets
         self.train = self.train.map(self._preprocess,
                                     remove_columns=self.train.column_names)
@@ -93,6 +76,34 @@ class AudioDataset:
                                 remove_columns=self.val.column_names)
         self.test = self.test.map(self._preprocess,
                                   remove_columns=self.test.column_names)
+
+    def initialise_preprocessor(self):
+        '''Initialise the preprocessor'''
+        # Intialise the tokenizer
+        self.tokenizer = Wav2Vec2CTCTokenizer(
+            vocab_file='vocab.json',
+            unk_token='<unk>',
+            pad_token='<pad>',
+            bos_token='<s>',
+            eos_token='</s>',
+            word_delimiter_token='|',
+            do_lower_case=True
+        )
+
+        # Initialise the feature extractor
+        self.extractor = Wav2Vec2FeatureExtractor(
+            feature_size=1,
+            sampling_rate=self.sampling_rate,
+            padding_value=0.0,
+            do_normalize=True,
+            return_attention_mask=True
+        )
+
+        # Initialise the processor, which wraps the tokenizer and the extractor
+        self.processor = Wav2Vec2Processor(
+            feature_extractor=self.extractor,
+            tokenizer=self.tokenizer
+        )
 
     def _load_dataset(self) -> Tuple[Dataset, Dataset, Dataset]:
         '''Loads a dataset.
