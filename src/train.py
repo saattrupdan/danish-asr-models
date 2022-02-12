@@ -89,7 +89,7 @@ def train(config: Optional[Union[dict, Config]] = None):
         tokenizer=dataset.tokenizer
     )
 
-    print(dataset.train[0])
+    print(dataset.train[0].keys())
 
     # Train the model
     trainer.train()
