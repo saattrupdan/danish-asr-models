@@ -48,7 +48,8 @@ def train(pretrained_model_id: str,
 
     # Push the preprocessor to the hub
     if config.push_to_hub:
-        dataset.processor.push_to_hub(finetuned_model_id)
+        dataset.tokenizer.push_to_hub(finetuned_model_id)
+        breakpoint()
 
     # Initialise data collator
     data_collator = DataCollatorCTCWithPadding(processor=dataset.processor,
@@ -116,7 +117,7 @@ def train(pretrained_model_id: str,
 if __name__ == '__main__':
     config = Config(mask_time_prob=0.0,
                     learning_rate=2e-5,
-                    epochs=50)
+                    epochs=30)
     train(pretrained_model_id='facebook/wav2vec2-xls-r-300m',
           finetuned_model_id='saattrupdan/wav2vec2-xls-r-300m-cv8-da',
           config=config)
