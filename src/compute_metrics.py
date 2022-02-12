@@ -41,9 +41,9 @@ def compute_metrics(pred, processor: Wav2Vec2Processor) -> Dict[str, float]:
     wer = wer_metric.compute(predictions=pred_str, references=label_str)
 
     print(f'WER = {100 * wer:.2f}%\n')
-    for label, pred in it.islice(zip(label_str, pred_str), 3):
+    for label, prediction in it.islice(zip(label_str, pred_str), 3):
         print(f'Ground truth = "{label}"')
-        print(f'Predicted = "{pred}"')
+        print(f'Predicted = "{prediction}"')
 
     breakpoint()
 
