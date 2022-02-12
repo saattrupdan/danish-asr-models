@@ -74,6 +74,8 @@ class AudioDataset:
         self.val = self.val.map(self._preprocess)
         self.test = self.test.map(self._preprocess)
 
+        breakpoint()
+
     def initialise_preprocessor(self):
         '''Initialise the preprocessor'''
         # Intialise the tokenizer
@@ -216,7 +218,6 @@ class AudioDataset:
         with self.processor.as_target_processor():
             examples['labels'] = (self.processor(examples['sentence'])
                                       .input_ids)
-            breakpoint()
 
         # Return the preprocessed examples
         return examples
