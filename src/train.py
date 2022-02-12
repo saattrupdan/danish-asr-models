@@ -35,6 +35,8 @@ def train(config: Optional[Union[dict, Config]] = None):
     # Preprocess the dataset
     dataset.preprocess()
 
+    breakpoint()
+
     # Push the tokenizer to the hub
     if config.push_to_hub:
         dataset.tokenizer.push_to_hub(config.finetuned_model_id)
