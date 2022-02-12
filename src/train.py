@@ -1,6 +1,9 @@
 '''Finetuning script for Danish speech recognition'''
 
-from transformers import Wav2Vec2ForCTC, TrainingArguments, Trainer
+from transformers import (Wav2Vec2ForCTC,
+                          TrainingArguments,
+                          Trainer,
+                          EarlyStoppingCallback)
 from typing import Optional, Union
 from data import AudioDataset
 from data_collator import DataCollatorCTCWithPadding
@@ -72,13 +75,19 @@ def train(config: Optional[Union[dict, Config]] = None):
         fp16=config.fp16,
         push_to_hub=config.push_to_hub,
         evaluation_strategy='steps',
-        eval_steps=400,
-        save_steps=400,
+        eval_steps=100,
+        save_steps=100,
         logging_steps=100,
         group_by_length=True,
         gradient_checkpointing=True,
         save_total_limit=1,
-        length_column_name='input_length'
+        length_column_name='input_length',
+        metric_for_best_model='val_wer'
+    )
+
+    # Create early stopping callback
+    early_stopping_callback = EarlyStoppingCallback(
+        early_stopping_patience=config.early_stopping_patience
     )
 
     # Initialise the trainer
@@ -89,7 +98,8 @@ def train(config: Optional[Union[dict, Config]] = None):
         compute_metrics=compute_metrics,
         train_dataset=dataset.train,
         eval_dataset=dataset.val,
-        tokenizer=dataset.tokenizer
+        tokenizer=dataset.tokenizer,
+        callbacks=[early_stopping_callback]
     )
 
     # Train the model
