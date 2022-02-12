@@ -46,7 +46,5 @@ def compute_metrics(pred: EvalPrediction,
         print(f'Ground truth = "{label}"')
         print(f'Predicted = "{prediction}"')
 
-    breakpoint()
-
     # Return the word error rate
     return dict(wer=wer)
