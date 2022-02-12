@@ -215,7 +215,8 @@ class AudioDataset:
 
         # Preprocess labels
         with self.processor.as_target_processor():
-            examples['labels'] = self.processor(examples['sentence']).input_ids
+            examples['labels'] = (self.processor(examples['sentence'])
+                                      .input_values)
 
         # Return the preprocessed examples
         return examples
