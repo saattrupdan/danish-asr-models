@@ -84,8 +84,9 @@ class AudioDataset:
             bos_token='<s>',
             eos_token='</s>',
             word_delimiter_token='|',
-            do_lower_case=True
+            do_lower_case=True,
         )
+        self.tokenizer.model_input_names[0] = 'input_values'
 
         # Initialise the feature extractor
         self.extractor = Wav2Vec2FeatureExtractor(
