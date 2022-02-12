@@ -71,9 +71,6 @@ class AudioDataset:
 
         # Preprocess the datasets
         self.train = self.train.map(self._preprocess)
-        with self.processor.as_target_processor():
-            breakpoint()
-            print(self.processor('hej'))
         self.val = self.val.map(self._preprocess)
         self.test = self.test.map(self._preprocess)
 
