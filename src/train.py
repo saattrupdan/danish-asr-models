@@ -74,10 +74,10 @@ def train(config: Optional[Union[dict, Config]] = None):
         evaluation_strategy='steps',
         eval_steps=400,
         save_steps=400,
-        logging_steps=400,
+        logging_steps=100,
         group_by_length=True,
         gradient_checkpointing=True,
-        save_total_limit=2,
+        save_total_limit=1,
         length_column_name='input_length'
     )
 
