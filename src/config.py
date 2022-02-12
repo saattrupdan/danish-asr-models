@@ -15,7 +15,7 @@ class Config(BaseModel):
             The subset of the dataset to finetune on. If None then no subset
             will be used. Defaults to 'da'.
         sampling_rate (int, optional):
-            The sample rate of the audio files. Defaults to 16000.
+            The sample rate of the audio files. Defaults to 16_000.
         train_name (str, optional):
             The name of the train dataset. Defaults to 'train'.
         validation_name (str or None, optional):
@@ -38,7 +38,7 @@ class Config(BaseModel):
         layerdrop (float, optional):
             The dropout rate for the layers. Defaults to 0.0.
         ctc_loss_reduction (str, optional):
-            The reduction to use for the CTC loss. Defaults to 'mean'.
+            The reduction to use for the CTC loss. Defaults to 'sum'.
         batch_size (int, optional):
             The batch size for training. Defaults to 16.
         gradient_accumulation_steps (int, optional):
@@ -49,7 +49,7 @@ class Config(BaseModel):
             The learning rate for the optimizer. Defaults to 3e-4.
         warmup_steps (int, optional):
             The number of warmup steps for the learning rate scheduler.
-            Defaults to 500.
+            Defaults to 100.
         fp16 (bool, optional):
             Whether to use 16-bit floating point precision. Note that this is
             only possible if GPU is enabled. Defaults to True.
