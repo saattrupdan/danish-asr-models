@@ -4,6 +4,7 @@ import numpy as np
 from transformers import Wav2Vec2Processor
 from datasets import load_metric
 from typing import Dict
+import itertools as it
 
 
 def compute_metrics(pred, processor: Wav2Vec2Processor) -> Dict[str, float]:
@@ -39,9 +40,13 @@ def compute_metrics(pred, processor: Wav2Vec2Processor) -> Dict[str, float]:
     # Compute the word error rate
     wer = wer_metric.compute(predictions=pred_str, references=label_str)
 
-    print(f'Ground truth = "{label_str}"')
-    print(f'Predicted = "{pred_str}"')
-    print(f'WER = {100 * wer:.2f}%')
+    for label, pred in it.islice(zip(label_str, pred_str), 3):
+        sample_wer = wer_metric.compute(predictions=pred, references=label)
+        print(f'Ground truth = "{label}"')
+        print(f'Predicted = "{pred}"')
+        print(f'WER = {100 * sample_wer:.2f}%')
+
+    breakpoint()
 
     # Return the word error rate
     return dict(wer=wer)
