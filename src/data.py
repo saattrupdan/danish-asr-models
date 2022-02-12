@@ -71,22 +71,22 @@ class AudioDataset:
 
         # Preprocess the datasets
         self.train = self.train.map(self._preprocess)
+        breakpoint()
         self.val = self.val.map(self._preprocess)
         self.test = self.test.map(self._preprocess)
-
-        breakpoint()
 
     def initialise_preprocessor(self):
         '''Initialise the preprocessor'''
         # Intialise the tokenizer
-        self.tokenizer = Wav2Vec2CTCTokenizer(
+        self.tokenizer = Wav2Vec2CTCTokenizer.from_pretrained(
+            pretrained_model_name_or_path='./',
             vocab_file='vocab.json',
             unk_token='<unk>',
             pad_token='<pad>',
             bos_token='<s>',
             eos_token='</s>',
             word_delimiter_token='|',
-            do_lower_case=True,
+            do_lower_case=True
         )
 
         # Initialise the feature extractor
