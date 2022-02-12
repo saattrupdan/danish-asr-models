@@ -2,8 +2,7 @@
 
 from transformers import (Wav2Vec2ForCTC,
                           TrainingArguments,
-                          Trainer,
-                          EarlyStoppingCallback)
+                          Trainer)
 from typing import Optional, Union
 from data import AudioDataset
 from data_collator import DataCollatorCTCWithPadding
@@ -12,10 +11,16 @@ from functools import partial
 from config import Config
 
 
-def train(config: Optional[Union[dict, Config]] = None):
+def train(pretrained_model_id: str,
+          finetuned_model_id: str,
+          config: Optional[Union[dict, Config]] = None):
     '''Finetune a pretrained audio model on a dataset.
 
     Args:
+        pretrained_model_id (str):
+            The model id of the pretrained model to finetune.
+        finetuned_model_id (str):
+            The model id of the finetuned model.
         config (Config, dict or None):
             Config object or dict containing the parameters for the finetuning.
             If None then a Config object is created from the default
@@ -43,7 +48,7 @@ def train(config: Optional[Union[dict, Config]] = None):
 
     # Push the tokenizer to the hub
     if config.push_to_hub:
-        dataset.tokenizer.push_to_hub(config.finetuned_model_id)
+        dataset.tokenizer.push_to_hub(finetuned_model_id)
 
     # Initialise data collator
     data_collator = DataCollatorCTCWithPadding(processor=dataset.processor,
@@ -51,7 +56,7 @@ def train(config: Optional[Union[dict, Config]] = None):
 
     # Initialise the model
     model = Wav2Vec2ForCTC.from_pretrained(
-        config.pretrained_model_id,
+        pretrained_model_id,
         attention_dropout=config.attention_dropout,
         hidden_dropout=config.hidden_dropout,
         feat_proj_dropout=config.feat_proj_dropout,
@@ -67,7 +72,7 @@ def train(config: Optional[Union[dict, Config]] = None):
 
     # Initialise training arguments
     training_args = TrainingArguments(
-        output_dir=config.finetuned_model_id.split('/')[-1],
+        output_dir=finetuned_model_id.split('/')[-1],
         per_device_train_batch_size=config.batch_size,
         gradient_accumulation_steps=config.gradient_accumulation_steps,
         learning_rate=config.learning_rate,
@@ -87,11 +92,6 @@ def train(config: Optional[Union[dict, Config]] = None):
         metric_for_best_model='wer'
     )
 
-    # Create early stopping callback
-    early_stopping_callback = EarlyStoppingCallback(
-        early_stopping_patience=config.early_stopping_patience
-    )
-
     # Initialise the trainer
     trainer = Trainer(
         model=model,
@@ -100,8 +100,7 @@ def train(config: Optional[Union[dict, Config]] = None):
         compute_metrics=partial(compute_metrics, processor=dataset.processor),
         train_dataset=dataset.train,
         eval_dataset=dataset.val,
-        tokenizer=dataset.tokenizer,
-        callbacks=[early_stopping_callback]
+        tokenizer=dataset.tokenizer
     )
 
     # Train the model
@@ -114,4 +113,5 @@ def train(config: Optional[Union[dict, Config]] = None):
 
 
 if __name__ == '__main__':
-    train()
+    train(pretrained_model_id='facebook/wav2vec2-xls-r-300m',
+          finetuned_model_id='saattrupdan/wav2vec2-xls-r-300m-cv8-da')

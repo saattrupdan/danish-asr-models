@@ -8,12 +8,6 @@ class Config(BaseModel):
     '''Config class that carries all the hyperparameters needed for training.
 
     Args:
-        pretrained_model_id (str, optional):
-            The id of the pretrained model to finetune. Defaults to
-            'Alvenir/wav2vec2-base-da'.
-        finetuned_model_id (str, optional):
-            The id of the model to finetune. Defaults to
-            'saattrupdan/wav2vec2-base-da-cv8'.
         attention_dropout (float, optional):
             The dropout rate for the attention layer. Defaults to 0.0.
         hidden_dropout (float, optional):
@@ -63,14 +57,12 @@ class Config(BaseModel):
             Whether to push the model to the hub. Defaults to True.
     '''
     # Model hyperparameters
-    pretrained_model_id: str = 'facebook/wav2vec2-xls-r-300m'
-    finetuned_model_id: str = 'saattrupdan/wav2vec2-xls-r-300m-cv8-da'
     attention_dropout: float = 0.0
     hidden_dropout: float = 0.0
     feat_proj_dropout: float = 0.0
     mask_time_prob: float = 0.05
     layerdrop: float = 0.0
-    ctc_loss_reduction: str = 'mean'
+    ctc_loss_reduction: str = 'sum'
 
     # Dataset parameters
     dataset_id: str = 'mozilla-foundation/common_voice_8_0'
@@ -85,7 +77,6 @@ class Config(BaseModel):
     gradient_accumulation_steps: int = 2
     epochs: int = 100
     learning_rate: float = 3e-4
-    warmup_steps: int = 500
-    early_stopping_patience: int = 10
+    warmup_steps: int = 100
     fp16: bool = True
     push_to_hub: bool = True
