@@ -85,9 +85,7 @@ def train(pretrained_model_id: str,
         group_by_length=True,
         gradient_checkpointing=True,
         save_total_limit=2,
-        length_column_name='input_length',
-        load_best_model_at_end=True,
-        metric_for_best_model='wer',
+        length_column_name='input_length'
     )
 
     # Initialise the trainer
