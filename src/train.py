@@ -115,11 +115,15 @@ def train(pretrained_model_id: str,
 
 
 if __name__ == '__main__':
-    config = Config(mask_time_prob=0.05,
+    config = Config(mask_time_prob=0.075,
                     learning_rate=3e-4,
-                    epochs=100,
+                    epochs=40,
                     batch_size=4,
-                    gradient_accumulation_steps=8)
+                    gradient_accumulation_steps=8,
+                    attention_dropout=0.1,
+                    feat_proj_dropout=0.1,
+                    hidden_dropout=0.1,
+                    layerdrop=0.1)
     train(pretrained_model_id='facebook/wav2vec2-xls-r-300m',
           finetuned_model_id='saattrupdan/wav2vec2-xls-r-300m-cv8-da',
           config=config)
