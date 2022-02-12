@@ -86,7 +86,6 @@ class AudioDataset:
             word_delimiter_token='|',
             do_lower_case=True,
         )
-        self.tokenizer.model_input_names[0] = 'input_values'
 
         # Initialise the feature extractor
         self.extractor = Wav2Vec2FeatureExtractor(
@@ -215,9 +214,8 @@ class AudioDataset:
 
         # Preprocess labels
         with self.processor.as_target_processor():
-            breakpoint()
             examples['labels'] = (self.processor(examples['sentence'])
-                                      .input_values)
+                                      .input_ids)
 
         # Return the preprocessed examples
         return examples
