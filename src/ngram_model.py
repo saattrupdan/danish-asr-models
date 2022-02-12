@@ -19,10 +19,13 @@ def clean_texts(examples: dict) -> dict:
             Cleaned examples of the dataset.
     '''
     # Import vocabulary
-    with Path('vocab.json').open() as f:
-        vocab = json.load(f)
-    print(vocab)
-    vocab = list(vocab.keys())
+    try:
+        with Path('vocab.json').open() as f:
+            vocab = json.load(f)
+        vocab = list(vocab.keys())
+    except Exception as e:
+        print(e)
+        breakpoint()
 
     # NFKC normalize the transcriptions
     examples['text'] = normalize('NFKC', examples['text'])
