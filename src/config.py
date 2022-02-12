@@ -50,7 +50,7 @@ class Config(BaseModel):
         gradient_accumulation_steps (int, optional):
             The number of steps to accumulate gradients for. Defaults to 2.
         epochs (int, optional):
-            The number of epochs to train for. Defaults to 30
+            The number of epochs to train for. Defaults to 100.
         learning_rate (float, optional):
             The learning rate for the optimizer. Defaults to 3e-4.
         warmup_steps (int, optional):
@@ -83,7 +83,7 @@ class Config(BaseModel):
     # Training hyperparameters
     batch_size: int = 16
     gradient_accumulation_steps: int = 2
-    epochs: int = 30
+    epochs: int = 100
     learning_rate: float = 3e-4
     warmup_steps: int = 500
     early_stopping_patience: int = 10
