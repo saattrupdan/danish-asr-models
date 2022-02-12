@@ -99,4 +99,4 @@ def train(config: Optional[Union[dict, Config]] = None):
 
 
 if __name__ == '__main__':
-    train(dict(fp16=False))
+    train()
