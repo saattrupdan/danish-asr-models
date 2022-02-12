@@ -45,13 +45,10 @@ class DataCollatorCTCWithPadding:
         '''
         # Split inputs and labels since they have to be of different lenghts
         # and need different padding methods
-        try:
-            input_features = [{'input_ids': feature['input_ids']}
-                              for feature in features]
-            label_features = [{'input_ids': feature['labels']}
-                              for feature in features]
-        except:
-            breakpoint()
+        input_features = [{'input_values': feature['input_values']}
+                          for feature in features]
+        label_features = [{'input_ids': feature['labels']}
+                          for feature in features]
 
         # Process audio
         batch = self.processor.pad(
