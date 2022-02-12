@@ -20,7 +20,9 @@ def clean_texts(examples: dict) -> dict:
     '''
     # Import vocabulary
     with Path('vocab.json').open() as f:
-        vocab = list(json.load(f).keys())
+        vocab = json.load(f)
+    print(vocab)
+    vocab = list(vocab.keys())
 
     # NFKC normalize the transcriptions
     examples['text'] = normalize('NFKC', examples['text'])
