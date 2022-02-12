@@ -46,9 +46,9 @@ def train(pretrained_model_id: str,
     # Preprocess the dataset
     dataset.preprocess()
 
-    # Push the tokenizer to the hub
+    # Push the preprocessor to the hub
     if config.push_to_hub:
-        dataset.tokenizer.push_to_hub(finetuned_model_id)
+        dataset.processor.push_to_hub(finetuned_model_id)
 
     # Initialise data collator
     data_collator = DataCollatorCTCWithPadding(processor=dataset.processor,
