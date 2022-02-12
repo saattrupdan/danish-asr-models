@@ -39,5 +39,9 @@ def compute_metrics(pred, processor: Wav2Vec2Processor) -> Dict[str, float]:
     # Compute the word error rate
     wer = wer_metric.compute(predictions=pred_str, references=label_str)
 
+    print(f'Ground truth = "{label_str}"')
+    print(f'Predicted = "{pred_str}"')
+    print(f'WER = {100 * wer:.2f}%')
+
     # Return the word error rate
     return dict(wer=wer)
