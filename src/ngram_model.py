@@ -51,7 +51,7 @@ def train_ngram_model():
     dataset = dataset.map(partial(clean_texts, vocab=vocab))
 
     # Push the preprocessed dataset to the HF Hub
-    dataset.push_to_hub('DDSC/reddit-da-asr-preprocessed')
+    dataset.push_to_hub('DDSC/reddit-da-asr-preprocessed', split='train')
 
 
 if __name__ == '__main__':
