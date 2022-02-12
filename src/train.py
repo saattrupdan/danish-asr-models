@@ -46,6 +46,9 @@ def train(pretrained_model_id: str,
     # Preprocess the dataset
     dataset.preprocess()
 
+    # Save the preprocessor
+    dataset.processor.save_pretrained(finetuned_model_id.split('/')[-1])
+
     # Push the preprocessor to the hub
     if config.push_to_hub:
         dataset.tokenizer.push_to_hub(finetuned_model_id)
@@ -75,6 +78,7 @@ def train(pretrained_model_id: str,
     # Initialise training arguments
     training_args = TrainingArguments(
         output_dir=finetuned_model_id.split('/')[-1],
+        hub_model_id=finetuned_model_id,
         per_device_train_batch_size=config.batch_size,
         gradient_accumulation_steps=config.gradient_accumulation_steps,
         learning_rate=config.learning_rate,
@@ -91,7 +95,7 @@ def train(pretrained_model_id: str,
         save_total_limit=1,
         length_column_name='input_length',
         load_best_model_at_end=True,
-        metric_for_best_model='wer'
+        metric_for_best_model='wer',
     )
 
     # Initialise the trainer
