@@ -84,7 +84,7 @@ def train(config: Optional[Union[dict, Config]] = None):
         save_total_limit=1,
         length_column_name='input_length',
         load_best_model_at_end=True,
-        metric_for_best_model='val_wer'
+        metric_for_best_model='wer'
     )
 
     # Create early stopping callback
