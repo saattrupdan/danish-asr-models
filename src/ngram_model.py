@@ -3,11 +3,12 @@
 from datasets import load_dataset
 from unicodedata import normalize
 from pathlib import Path
+from functools import partial
 import json
 import re
 
 
-def clean_texts(examples: dict) -> dict:
+def clean_texts(examples: dict, vocab: dict) -> dict:
     '''Clean the texts of the dataset.
 
     Args:
@@ -18,17 +19,6 @@ def clean_texts(examples: dict) -> dict:
         dict:
             Cleaned examples of the dataset.
     '''
-    # Import vocabulary
-    try:
-        with Path('vocab.json').open() as f:
-            vocab = json.load(f)
-        vocab.pop('<unk>')
-        vocab.pop('<pad>')
-        vocab = vocab.keys()
-    except Exception as e:
-        print(e)
-        breakpoint()
-
     # NFKC normalize the transcriptions
     examples['text'] = normalize('NFKC', examples['text'])
 
@@ -36,7 +26,7 @@ def clean_texts(examples: dict) -> dict:
     examples['text'] = examples['text'].lower()
 
     # Remove all characters that are not in the vocabulary, or are whitespace
-    regex = f'[^{re.escape("".join(vocab))} ]'
+    regex = f'[^{re.escape("".join(vocab.keys()))} ]'
     examples['text'] = re.sub(regex, '', examples['text'])
 
     # Replace multiple spaces with a single space
@@ -51,8 +41,14 @@ def train_ngram_model():
     # Load the dataset
     dataset = load_dataset('DDSC/reddit-da', split='train')
 
+    # Load the vocabulary
+    with Path('vocab.json').open() as f:
+        vocab = json.load(f)
+    vocab.pop('<unk>')
+    vocab.pop('<pad>')
+
     # Preprocess the dataset
-    dataset = dataset.map(clean_texts)
+    dataset = dataset.map(partial(clean_texts, vocab=vocab))
 
     # Push the preprocessed dataset to the HF Hub
     dataset.push_to_hub('DDSC/reddit-da-asr-preprocessed')
