@@ -57,7 +57,7 @@ def train(config: Optional[Union[dict, Config]] = None):
     )
 
     # Freeze the feature extractor
-    model.freeze_feature_extractor()
+    model.freeze_feature_encoder()
 
     # Initialise training arguments
     training_args = TrainingArguments(
