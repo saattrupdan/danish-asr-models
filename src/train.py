@@ -46,13 +46,6 @@ def train(pretrained_model_id: str,
     # Preprocess the dataset
     dataset.preprocess()
 
-    # Save the preprocessor
-    dataset.processor.save_pretrained(finetuned_model_id.split('/')[-1])
-
-    # Push the preprocessor to the hub
-    if config.push_to_hub:
-        dataset.tokenizer.push_to_hub(finetuned_model_id)
-
     # Initialise data collator
     data_collator = DataCollatorCTCWithPadding(processor=dataset.processor,
                                                padding='longest')
@@ -107,6 +100,9 @@ def train(pretrained_model_id: str,
         eval_dataset=dataset.val,
         tokenizer=dataset.tokenizer
     )
+
+    # Save the preprocessor
+    dataset.processor.save_pretrained(finetuned_model_id.split('/')[-1])
 
     # Train the model
     trainer.train()
