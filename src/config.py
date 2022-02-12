@@ -63,8 +63,8 @@ class Config(BaseModel):
             Whether to push the model to the hub. Defaults to True.
     '''
     # Model hyperparameters
-    pretrained_model_id: str = 'Alvenir/wav2vec2-base-da'
-    finetuned_model_id: str = 'saattrupdan/alvenir-wav2vec2-base-da-cv8'
+    pretrained_model_id: str = 'facebook/wav2vec2-xls-r-300m'
+    finetuned_model_id: str = 'saattrupdan/wav2vec2-xls-r-300m-cv8-da'
     attention_dropout: float = 0.0
     hidden_dropout: float = 0.0
     feat_proj_dropout: float = 0.0
