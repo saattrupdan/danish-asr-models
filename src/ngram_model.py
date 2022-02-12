@@ -22,7 +22,9 @@ def clean_texts(examples: dict) -> dict:
     try:
         with Path('vocab.json').open() as f:
             vocab = json.load(f)
-        vocab = list(vocab.keys())
+        vocab.pop('<unk>')
+        vocab.pop('<pad>')
+        vocab = vocab.keys()
     except Exception as e:
         print(e)
         breakpoint()
