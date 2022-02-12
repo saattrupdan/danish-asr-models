@@ -77,7 +77,8 @@ def train(config: Optional[Union[dict, Config]] = None):
         logging_steps=400,
         group_by_length=True,
         gradient_checkpointing=True,
-        save_total_limit=2
+        save_total_limit=2,
+        length_column_name='input_length'
     )
 
     # Initialise the trainer
