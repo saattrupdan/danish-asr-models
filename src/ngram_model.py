@@ -25,6 +25,10 @@ def clean_texts(examples: dict, vocab: dict) -> dict:
     # Make the text lowercase
     examples['text'] = examples['text'].lower()
 
+    # Remove links
+    examples['text'] = re.sub(r'http[^ ]*', '', examples['text'])
+    examples['text'] = re.sub(r'\[[Ll][Ii][Nn][Kk]\]', '', examples['text'])
+
     # Remove all characters that are not in the vocabulary, or are whitespace
     regex = f'[^{re.escape("".join(vocab.keys()))} ]'
     examples['text'] = re.sub(regex, '', examples['text'])
