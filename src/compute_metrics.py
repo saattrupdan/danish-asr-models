@@ -1,17 +1,18 @@
 '''Function to compute the metrics for speech recognition models'''
 
 import numpy as np
-from transformers import Wav2Vec2Processor
+from transformers import Wav2Vec2Processor, EvalPrediction
 from datasets import load_metric
 from typing import Dict
 import itertools as it
 
 
-def compute_metrics(pred, processor: Wav2Vec2Processor) -> Dict[str, float]:
+def compute_metrics(pred: EvalPrediction,
+                    processor: Wav2Vec2Processor) -> Dict[str, float]:
     '''Compute the word error rate of predictions.
 
     Args:
-        pred (Prediction object):
+        pred (EvalPrediction):
             Prediction output of the speech recognition model.
         processor (Wav2Vec2Processor):
             Audio and transcription processor.
