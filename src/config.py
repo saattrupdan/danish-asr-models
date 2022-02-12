@@ -39,6 +39,8 @@ class Config(BaseModel):
             The dropout rate for the layers. Defaults to 0.0.
         ctc_loss_reduction (str, optional):
             The reduction to use for the CTC loss. Defaults to 'sum'.
+        freeze_feature_encoder (bool, optional):
+            Whether to freeze the feature encoder. Defaults to False.
         batch_size (int, optional):
             The batch size for training. Defaults to 16.
         gradient_accumulation_steps (int, optional):
@@ -71,6 +73,7 @@ class Config(BaseModel):
     mask_time_prob: float = 0.05
     layerdrop: float = 0.0
     ctc_loss_reduction: str = 'sum'
+    freeze_feature_encoder: bool = False
 
     # Training hyperparameters
     batch_size: int = 16

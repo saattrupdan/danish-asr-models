@@ -67,8 +67,9 @@ def train(pretrained_model_id: str,
         vocab_size=len(dataset.tokenizer)
     )
 
-    # Freeze the feature extractor
-    model.freeze_feature_encoder()
+    # Freeze the feature encoder
+    if config.freeze_feature_encoder:
+        model.freeze_feature_encoder()
 
     # Initialise training arguments
     training_args = TrainingArguments(
