@@ -91,6 +91,8 @@ def train(config: Optional[Union[dict, Config]] = None):
         tokenizer=dataset.tokenizer
     )
 
+    breakpoint()
+
     # Train the model
     trainer.train()
 
