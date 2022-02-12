@@ -70,12 +70,9 @@ class AudioDataset:
         self.initialise_preprocessor()
 
         # Preprocess the datasets
-        self.train = self.train.map(self._preprocess,
-                                    remove_columns=self.train.column_names)
-        self.val = self.val.map(self._preprocess,
-                                remove_columns=self.val.column_names)
-        self.test = self.test.map(self._preprocess,
-                                  remove_columns=self.test.column_names)
+        self.train = self.train.map(self._preprocess)
+        self.val = self.val.map(self._preprocess)
+        self.test = self.test.map(self._preprocess)
 
     def initialise_preprocessor(self):
         '''Initialise the preprocessor'''
