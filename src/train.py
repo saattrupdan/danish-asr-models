@@ -79,12 +79,12 @@ def train(pretrained_model_id: str,
         fp16=config.fp16,
         push_to_hub=config.push_to_hub,
         evaluation_strategy='steps',
-        eval_steps=100,
-        save_steps=100,
+        eval_steps=300,
+        save_steps=300,
         logging_steps=100,
         group_by_length=True,
         gradient_checkpointing=True,
-        save_total_limit=1,
+        save_total_limit=2,
         length_column_name='input_length',
         load_best_model_at_end=True,
         metric_for_best_model='wer',
@@ -107,6 +107,9 @@ def train(pretrained_model_id: str,
     # Train the model
     trainer.train()
 
+    # Save the model
+    model.save_pretrained(finetuned_model_id.split('/')[-1])
+
     # Push the model to the hub
     if config.push_to_hub:
         trainer.push_to_hub()
@@ -115,8 +118,8 @@ def train(pretrained_model_id: str,
 
 if __name__ == '__main__':
     config = Config(mask_time_prob=0.0,
-                    learning_rate=2e-5,
-                    epochs=30,
+                    learning_rate=4e-5,
+                    epochs=100,
                     batch_size=4,
                     gradient_accumulation_steps=8)
     train(pretrained_model_id='facebook/wav2vec2-xls-r-300m',
