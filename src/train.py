@@ -8,6 +8,7 @@ from typing import Optional, Union
 from data import AudioDataset
 from data_collator import DataCollatorCTCWithPadding
 from compute_metrics import compute_metrics
+from functools import partial
 from config import Config
 
 
@@ -96,7 +97,7 @@ def train(config: Optional[Union[dict, Config]] = None):
         model=model,
         data_collator=data_collator,
         args=training_args,
-        compute_metrics=compute_metrics,
+        compute_metrics=partial(compute_metrics, processor=dataset.processor),
         train_dataset=dataset.train,
         eval_dataset=dataset.val,
         tokenizer=dataset.tokenizer,
