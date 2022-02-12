@@ -35,6 +35,8 @@ def clean_texts(examples: dict) -> dict:
     # Replace multiple spaces with a single space
     examples['text'] = re.sub(r' +', ' ', examples['text'])
 
+    return examples
+
 
 def train_ngram_model():
     '''Trains an ngram language model'''
