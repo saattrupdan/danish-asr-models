@@ -115,8 +115,8 @@ def train(pretrained_model_id: str,
 
 
 if __name__ == '__main__':
-    config = Config(mask_time_prob=0.00,
-                    learning_rate=4e-5,
+    config = Config(mask_time_prob=0.05,
+                    learning_rate=3e-4,
                     epochs=100,
                     batch_size=4,
                     gradient_accumulation_steps=8)
