@@ -12,7 +12,7 @@ from functools import partial
 from config import Config
 
 
-def train(config: Optional[Union[dict, Config]] = None):
+def train(config: Optional[Union[dict, Config]] = None, **kwargs):
     '''Finetune a pretrained audio model on a dataset.
 
     Args:
@@ -20,15 +20,22 @@ def train(config: Optional[Union[dict, Config]] = None):
             Config object or dict containing the parameters for the finetuning.
             If None then a Config object is created from the default
             parameters. Defaults to None.
+        **kwargs:
+            Keyword arguments to be passed to the config
     '''
     # If no config is provided, create a config object from the default
     # parameters
     if config is None:
-        config = Config()
+        config = Config(**kwargs)
 
     # If a dict is provided, create a config object from the dict
     elif isinstance(config, dict):
-        config = Config(**config)
+        config = Config(**{**config, **kwargs})
+
+    # If a Config object is provided, update the config object with the
+    # provided keyword arguments
+    elif isinstance(config, Config) and len(kwargs) > 0:
+        config = Config(**{**config.__dict__, **kwargs})
 
     # Load dataset
     dataset = AudioDataset(dataset_id=config.dataset_id,
