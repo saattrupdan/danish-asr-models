@@ -131,7 +131,7 @@ def train(pretrained_model_id: str,
 
 if __name__ == '__main__':
     config = Config(mask_time_prob=0.075,
-                    feat_proj_dropout=0.05,
+                    mask_feature_prob=0.05,
                     learning_rate=3e-4,
                     epochs=500,
                     batch_size=4,
