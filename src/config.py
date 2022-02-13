@@ -33,8 +33,12 @@ class Config(BaseModel):
             The dropout rate for the hidden layer. Defaults to 0.0.
         feat_proj_dropout (float, optional):
             The dropout rate for the feature projection layer. Defaults to 0.0.
+        final_dropout (float, optional):
+            The dropout rate for the final layer. Defaults to 0.0.
         mask_time_prob (float, optional):
             The probability of masking the time dimension. Defaults to 0.05.
+        mask_feature_prob (float, optional):
+            The probability of masking the feature dimension. Defaults to 0.0.
         layerdrop (float, optional):
             The dropout rate for the layers. Defaults to 0.0.
         ctc_loss_reduction (str, optional):
@@ -70,7 +74,9 @@ class Config(BaseModel):
     attention_dropout: float = 0.0
     hidden_dropout: float = 0.0
     feat_proj_dropout: float = 0.0
+    final_dropout: float = 0.0
     mask_time_prob: float = 0.05
+    mask_feature_prob: float = 0.0
     layerdrop: float = 0.0
     ctc_loss_reduction: str = 'mean'
     freeze_feature_encoder: bool = False
