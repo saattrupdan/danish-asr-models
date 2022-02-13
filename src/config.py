@@ -87,5 +87,6 @@ class Config(BaseModel):
     epochs: int = 100
     learning_rate: float = 3e-4
     warmup_steps: int = 100
+    early_stopping_patience: int = 5
     fp16: bool = True
     push_to_hub: bool = True

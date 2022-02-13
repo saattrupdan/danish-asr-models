@@ -2,7 +2,8 @@
 
 from transformers import (Wav2Vec2ForCTC,
                           TrainingArguments,
-                          Trainer)
+                          Trainer,
+                          EarlyStoppingCallback)
 from typing import Optional, Union
 from data import AudioDataset
 from data_collator import DataCollatorCTCWithPadding
@@ -87,8 +88,19 @@ def train(pretrained_model_id: str,
         group_by_length=True,
         gradient_checkpointing=True,
         save_total_limit=2,
-        length_column_name='input_length'
+        length_column_name='input_length',
+        load_best_model_at_end=config.early_stopping,
+        metric_for_best_model='wer',
     )
+
+    # Create early stopping callback
+    if config.early_stopping:
+        early_stopping_callback = EarlyStoppingCallback(
+            early_stopping_patience=config.early_stopping_patience
+        )
+        callbacks = [early_stopping_callback]
+    else:
+        callbacks = []
 
     # Initialise the trainer
     trainer = Trainer(
@@ -98,7 +110,8 @@ def train(pretrained_model_id: str,
         compute_metrics=partial(compute_metrics, processor=dataset.processor),
         train_dataset=dataset.train,
         eval_dataset=dataset.val,
-        tokenizer=dataset.tokenizer
+        tokenizer=dataset.tokenizer,
+        callbacks=callbacks
     )
 
     # Save the preprocessor
@@ -127,7 +140,9 @@ if __name__ == '__main__':
                     feat_proj_dropout=0.1,
                     hidden_dropout=0.1,
                     final_dropout=0.1,
-                    layerdrop=0.1)
+                    layerdrop=0.1,
+                    early_stopping=True,
+                    early_stopping_patience=5)
     train(pretrained_model_id='facebook/wav2vec2-xls-r-300m',
           finetuned_model_id='saattrupdan/wav2vec2-xls-r-300m-cv8-da',
           config=config)
