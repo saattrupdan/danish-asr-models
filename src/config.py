@@ -8,6 +8,10 @@ class Config(BaseModel):
     '''Config class that carries all the hyperparameters needed for training.
 
     Args:
+        pretrained_model_id (str):
+            The model id of the pretrained model to finetune.
+        finetuned_model_id (str):
+            The model id of the finetuned model.
         dataset_id (str, optional):
             The id of the dataset to finetune on. Defaults to
             'mozilla-foundation/common_voice_8_0'.
@@ -67,7 +71,11 @@ class Config(BaseModel):
         push_to_hub (bool, optional):
             Whether to push the model to the hub. Defaults to True.
     '''
-    # Dataset parameters
+    # Model IDs
+    pretrained_model_id: str
+    finetuned_model_id: str
+
+    # Dataset hyperparameters
     dataset_id: str = 'mozilla-foundation/common_voice_8_0'
     dataset_subset: Optional[str] = 'da'
     sampling_rate: int = 16_000

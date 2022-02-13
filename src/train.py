@@ -12,16 +12,10 @@ from functools import partial
 from config import Config
 
 
-def train(pretrained_model_id: str,
-          finetuned_model_id: str,
-          config: Optional[Union[dict, Config]] = None):
+def train(config: Optional[Union[dict, Config]] = None):
     '''Finetune a pretrained audio model on a dataset.
 
     Args:
-        pretrained_model_id (str):
-            The model id of the pretrained model to finetune.
-        finetuned_model_id (str):
-            The model id of the finetuned model.
         config (Config, dict or None):
             Config object or dict containing the parameters for the finetuning.
             If None then a Config object is created from the default
@@ -53,7 +47,7 @@ def train(pretrained_model_id: str,
 
     # Initialise the model
     model = Wav2Vec2ForCTC.from_pretrained(
-        pretrained_model_id,
+        config.pretrained_model_id,
         attention_dropout=config.attention_dropout,
         hidden_dropout=config.hidden_dropout,
         feat_proj_dropout=config.feat_proj_dropout,
@@ -72,8 +66,8 @@ def train(pretrained_model_id: str,
 
     # Initialise training arguments
     training_args = TrainingArguments(
-        output_dir=finetuned_model_id.split('/')[-1],
-        hub_model_id=finetuned_model_id,
+        output_dir=config.finetuned_model_id.split('/')[-1],
+        hub_model_id=config.finetuned_model_id,
         per_device_train_batch_size=config.batch_size,
         gradient_accumulation_steps=config.gradient_accumulation_steps,
         learning_rate=config.learning_rate,
@@ -116,13 +110,13 @@ def train(pretrained_model_id: str,
     )
 
     # Save the preprocessor
-    dataset.processor.save_pretrained(finetuned_model_id.split('/')[-1])
+    dataset.processor.save_pretrained(config.finetuned_model_id.split('/')[-1])
 
     # Train the model
     trainer.train()
 
     # Save the model
-    model.save_pretrained(finetuned_model_id.split('/')[-1])
+    model.save_pretrained(config.finetuned_model_id.split('/')[-1])
 
     # Push the model to the hub
     if config.push_to_hub:
@@ -131,20 +125,24 @@ def train(pretrained_model_id: str,
 
 
 if __name__ == '__main__':
-    config = Config(mask_time_prob=0.075,
-                    mask_feature_prob=0.075,
-                    learning_rate=2e-5,
-                    epochs=500,
-                    warmup_steps=500,
-                    batch_size=4,
-                    gradient_accumulation_steps=8,
-                    attention_dropout=0.1,
-                    feat_proj_dropout=0.1,
-                    hidden_dropout=0.1,
-                    final_dropout=0.5,
-                    layerdrop=0.1,
-                    early_stopping=True,
-                    early_stopping_patience=5)
-    train(pretrained_model_id='facebook/wav2vec2-xls-r-300m',
-          finetuned_model_id='saattrupdan/wav2vec2-xls-r-300m-cv8-da',
-          config=config)
+
+    xlsr_300m_config = Config(
+        pretrained_model_id='facebook/wav2vec2-xls-r-300m',
+        finetuned_model_id='saattrupdan/wav2vec2-xls-r-300m-cv8-da',
+        mask_time_prob=0.075,
+        mask_feature_prob=0.075,
+        learning_rate=2e-5,
+        epochs=500,
+        warmup_steps=500,
+        batch_size=4,
+        gradient_accumulation_steps=8,
+        attention_dropout=0.1,
+        feat_proj_dropout=0.1,
+        hidden_dropout=0.1,
+        final_dropout=0.5,
+        layerdrop=0.1,
+        early_stopping=True,
+        early_stopping_patience=5
+    )
+
+    train(xlsr_300m_config)
