@@ -138,7 +138,7 @@ if __name__ == '__main__':
         finetuned_model_id='saattrupdan/wav2vec2-xls-r-300m-cv8-da',
         mask_time_prob=0.075,
         mask_feature_prob=0.075,
-        learning_rate=2e-5,
+        learning_rate=4e-5,
         epochs=500,
         warmup_steps=500,
         batch_size=4,
