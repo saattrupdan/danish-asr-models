@@ -56,6 +56,11 @@ class Config(BaseModel):
         warmup_steps (int, optional):
             The number of warmup steps for the learning rate scheduler.
             Defaults to 100.
+        early_stopping (bool, optional):
+            Whether to use early stopping. Defaults to True.
+        early_stopping_patience (int, optional):
+            The patience for early stopping. Only relevant if `early_stopping`
+            is True. Defaults to 5.
         fp16 (bool, optional):
             Whether to use 16-bit floating point precision. Note that this is
             only possible if GPU is enabled. Defaults to True.
@@ -87,6 +92,7 @@ class Config(BaseModel):
     epochs: int = 100
     learning_rate: float = 3e-4
     warmup_steps: int = 100
+    early_stopping: bool = True
     early_stopping_patience: int = 5
     fp16: bool = True
     push_to_hub: bool = True
