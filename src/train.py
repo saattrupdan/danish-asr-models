@@ -131,8 +131,8 @@ def train(pretrained_model_id: str,
 
 if __name__ == '__main__':
     config = Config(mask_time_prob=0.075,
-                    mask_feature_prob=0.05,
-                    learning_rate=3e-4,
+                    mask_feature_prob=0.075,
+                    learning_rate=2e-5,
                     epochs=500,
                     batch_size=4,
                     gradient_accumulation_steps=8,
@@ -142,7 +142,7 @@ if __name__ == '__main__':
                     final_dropout=0.1,
                     layerdrop=0.1,
                     early_stopping=True,
-                    early_stopping_patience=5)
+                    early_stopping_patience=10)
     train(pretrained_model_id='facebook/wav2vec2-xls-r-300m',
           finetuned_model_id='saattrupdan/wav2vec2-xls-r-300m-cv8-da',
           config=config)
