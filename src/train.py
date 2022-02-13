@@ -91,6 +91,7 @@ def train(pretrained_model_id: str,
         length_column_name='input_length',
         load_best_model_at_end=config.early_stopping,
         metric_for_best_model='wer',
+        greater_is_better=False
     )
 
     # Create early stopping callback
@@ -143,7 +144,7 @@ if __name__ == '__main__':
                     final_dropout=0.5,
                     layerdrop=0.1,
                     early_stopping=True,
-                    early_stopping_patience=10)
+                    early_stopping_patience=5)
     train(pretrained_model_id='facebook/wav2vec2-xls-r-300m',
           finetuned_model_id='saattrupdan/wav2vec2-xls-r-300m-cv8-da',
           config=config)
