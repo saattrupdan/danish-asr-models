@@ -152,4 +152,23 @@ if __name__ == '__main__':
         early_stopping_patience=5
     )
 
-    train(xlsr_300m_config)
+    alvenir_config = Config(
+        pretrained_model_id='Alvenir/wav2vec2-base-da',
+        finetuned_model_id='saattrupdan/alvenir-wav2vec2-base-cv8-da',
+        mask_time_prob=0.075,
+        mask_feature_prob=0.075,
+        learning_rate=4e-5,
+        epochs=500,
+        warmup_steps=500,
+        batch_size=4,
+        gradient_accumulation_steps=8,
+        attention_dropout=0.1,
+        feat_proj_dropout=0.1,
+        hidden_dropout=0.1,
+        final_dropout=0.1,
+        layerdrop=0.1,
+        early_stopping=True,
+        early_stopping_patience=5
+    )
+
+    train(alvenir_config)
