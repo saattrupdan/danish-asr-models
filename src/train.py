@@ -165,7 +165,7 @@ if __name__ == '__main__':
         attention_dropout=0.1,
         feat_proj_dropout=0.1,
         hidden_dropout=0.1,
-        final_dropout=0.1,
+        final_dropout=0.3,
         layerdrop=0.1,
         early_stopping=True,
         early_stopping_patience=5
