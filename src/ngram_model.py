@@ -52,39 +52,49 @@ def train_ngram_model(model_id: str,
                   'cmake .. && '
                   'make -j2')
 
-    # Train the n-gram language model
+    # Train the n-gram language model if it doesn't already exist
     ngram_path = data_dir / f'raw_{n}gram.arpa'
-    os.system(f'kenlm/build/bin/lmplz -o {n} < "{text_path}" > "{ngram_path}"')
-
-    # Add end-of-sentence marker </s> to the n-gram language model
     correct_ngram_path = data_dir / f'{n}gram.arpa'
-    with ngram_path.open('r') as f_in:
-        with correct_ngram_path.open('w') as f_out:
+    if not correct_ngram_path.exists():
 
-            # Iterate over the lines in the input file
-            has_added_eos = False
-            for line in f_in:
+        # If the raw language model does not exist either, then train from
+        # scratch
+        if not ngram_path.exists():
+            os.system(f'kenlm/build/bin/lmplz -o {n} < '
+                      f'"{text_path}" > '
+                      f'"{ngram_path}"')
 
-                # Increment the 1-gram count by 1
-                if not has_added_eos and "ngram 1=" in line:
-                    count = line.strip().split("=")[-1]
-                    f_out.write(line.replace(f"{count}", f"{int(count)+1}"))
+        # Add end-of-sentence marker </s> to the n-gram language model to get
+        # the final language model
+        with ngram_path.open('r') as f_in:
+            with correct_ngram_path.open('w') as f_out:
 
-                # Add the end-of-sentence marker right after the the
-                # start-of-sentence marker
-                elif not has_added_eos and "<s>" in line:
-                    f_out.write(line)
-                    f_out.write(line.replace("<s>", "</s>"))
-                    has_added_eos = True
+                # Iterate over the lines in the input file
+                has_added_eos = False
+                for line in f_in:
 
-                # Otherwise we're just copying the line verbatim
-                else:
-                    f_out.write(line)
+                    # Increment the 1-gram count by 1
+                    if not has_added_eos and "ngram 1=" in line:
+                        count = line.strip().split("=")[-1]
+                        new_line = line.replace(f"{count}", f"{int(count)+1}")
+                        f_out.write(new_line)
+
+                    # Add the end-of-sentence marker right after the the
+                    # start-of-sentence marker
+                    elif not has_added_eos and "<s>" in line:
+                        f_out.write(line)
+                        f_out.write(line.replace("<s>", "</s>"))
+                        has_added_eos = True
+
+                    # Otherwise we're just copying the line verbatim
+                    else:
+                        f_out.write(line)
 
     # Load the pretrained processor
     processor = AutoProcessor.from_pretrained(model_id)
 
     # Extract the vocabulary, which will be used to build the CTC decoder
+    breakpoint()
     vocab_dict = processor.tokenizer.get_vocab()
     sorted_vocab_dict = sorted(vocab_dict.items(), key=lambda item: item[1])
     sorted_vocab_dict = {k.lower(): v for k, v in sorted_vocab_dict}
