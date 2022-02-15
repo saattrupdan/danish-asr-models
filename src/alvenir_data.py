@@ -1,14 +1,12 @@
 '''Class used to load in the Alvenir test dataset'''
 
-from datasets import Dataset, DatasetDict, Audio
+from datasets import Dataset, Audio
 import pandas as pd
 from pathlib import Path
 from typing import Union
 
 
-def load_data(
-        data_dir: Union[Path, str] = 'data/alvenir-test-set'
-    ) -> DatasetDict:
+def load_data(data_dir: Union[Path, str] = 'data/alvenir-test-set') -> Dataset:
     '''Loads the Alvenir dataset.
 
     Args:
@@ -17,8 +15,8 @@ def load_data(
             'data/alvenir-test-set'.
 
     Returns:
-        DatasetDict:
-            The loaded dataset, with 'train', 'validation' and 'test' as keys.
+        Dataset:
+            The loaded dataset.
 
     Raises:
         FileNotFoundError:
@@ -63,30 +61,11 @@ def load_data(
     }
     metadata.rename(columns=renaming_dict, inplace=True)
 
-    # Do stratified splits into train/val/test, based on the age
-    train = (metadata.groupby('age', group_keys=False)
-                     .apply(lambda x: x.sample(frac=0.8)))
-    val_test = metadata.loc[[idx for idx in metadata.index
-                             if idx not in train.index]]
-    val = (val_test.groupby('age', group_keys=False)
-                   .apply(lambda x: x.sample(frac=0.5)))
-    test = val_test.loc[[idx for idx in val_test.index
-                         if idx not in val.index]]
-
     # Convert the dataframe to a HuggingFace Dataset
-    train_dataset = Dataset.from_pandas(train, preserve_index=False)
-    val_dataset = Dataset.from_pandas(val, preserve_index=False)
-    test_dataset = Dataset.from_pandas(test, preserve_index=False)
+    dataset = Dataset.from_pandas(metadata, preserve_index=False)
 
     # Cast `path` as the audio path column
-    train_dataset = train_dataset.cast_column('audio', Audio())
-    val_dataset = val_dataset.cast_column('audio', Audio())
-    test_dataset = test_dataset.cast_column('audio', Audio())
-
-    # Collect the datasets in a DatasetDict
-    dataset = DatasetDict(train=train_dataset,
-                          validation=val_dataset,
-                          test=test_dataset)
+    dataset = dataset.cast_column('audio', Audio())
 
     return dataset
 
