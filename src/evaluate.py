@@ -59,14 +59,14 @@ def evaluate(model_id: str,
     dataset = dataset.map(preprocess_fn)
 
     # Initialise data collator
-    data_collator = DataCollatorCTCWithPadding(processor=dataset.processor,
+    data_collator = DataCollatorCTCWithPadding(processor=processor,
                                                padding='longest')
 
     # Initialise the trainer
     trainer = Trainer(
         model=model,
         data_collator=data_collator,
-        compute_metrics=partial(compute_metrics, processor=dataset.processor),
+        compute_metrics=partial(compute_metrics, processor=processor),
         eval_dataset=dataset,
         tokenizer=processor.tokenizer
     )
