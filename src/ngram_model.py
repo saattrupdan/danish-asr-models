@@ -90,11 +90,14 @@ def train_ngram_model(model_id: str,
                     else:
                         f_out.write(line)
 
+    # Remove non-correct ngram path
+    if ngram_path.exists():
+        ngram_path.unlink()
+
     # Load the pretrained processor
     processor = AutoProcessor.from_pretrained(model_id)
 
     # Extract the vocabulary, which will be used to build the CTC decoder
-    breakpoint()
     vocab_dict = processor.tokenizer.get_vocab()
     sorted_vocab_dict = sorted(vocab_dict.items(), key=lambda item: item[1])
     sorted_vocab_dict = {k.lower(): v for k, v in sorted_vocab_dict}
@@ -111,18 +114,21 @@ def train_ngram_model(model_id: str,
     )
 
     # Clone the repo containing the finetuned model
-    repo = Repository(local_dir=model_id.split('/')[-1], clone_from=model_id)
+    repo_dir = Path(model_id.split('/')[-1])
+    repo = Repository(local_dir=str(repo_dir), clone_from=model_id)
 
     # Save the new processor to the repo
-    processor_with_lm.save_pretrained(model_id.split('/')[-1])
+    processor_with_lm.save_pretrained(str(repo_dir))
 
     # Compress the ngram model
     os.system(f'kenlm/build/bin/build_binary '
-              f'{model_id.split("/")[-1]}/language_model/{n}gram.arpa '
-              f'{model_id.split("/")[-1]}/language_model/{n}gram.bin')
+              f'{repo_dir}/language_model/{n}gram.arpa '
+              f'{repo_dir}/language_model/{n}gram.bin')
 
     # Remove the uncompressed ngram model
-    ngram_path.unlink()
+    uncompressed_path = repo_dir / 'language_model' / f'{n}gram.arpa'
+    if uncompressed_path.exists():
+        uncompressed_path.unlink()
 
     # Push the changes to the repo
     repo.push_to_hub(commit_message="Upload LM-boosted decoder")
