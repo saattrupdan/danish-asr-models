@@ -36,9 +36,6 @@ def evaluate(model_id: str,
             A dictionary with the metric names as keys and the metric values as
             values.
     '''
-    # Disable most of the `transformers` logging
-    tf_logging.set_verbosity_error()
-
     # Load the dataset
     try:
         dataset = ds_load_dataset(dataset_id,
@@ -75,6 +72,8 @@ def evaluate(model_id: str,
         tokenizer=processor.tokenizer
     )
 
+    # Remove trainer logging
+    trainer.log = lambda _: None
 
     # Evaluate the model
     metrics = trainer.evaluate(dataset)
