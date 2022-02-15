@@ -135,3 +135,6 @@ data/
 
 # MacOS
 .DS_Store
+
+# KenLM folder
+kenlm/
