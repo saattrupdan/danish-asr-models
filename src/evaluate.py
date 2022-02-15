@@ -8,10 +8,32 @@ from typing import Optional, Dict
 from unicodedata import normalize
 from functools import partial
 import re
+import click
 from data_collator import DataCollatorCTCWithPadding
 from compute_metrics import compute_metrics
 
 
+@click.command()
+@click.option('--model_id',
+              '-m',
+              type=str,
+              help='The ID of the model to evaluate')
+@click.option('--dataset_id',
+              '-d',
+              type=str,
+              help='The ID of the dataset to evaluate')
+@click.option('--dataset_subset',
+              default=None,
+              type=Optional[str],
+              help='The subset of the dataset to evaluate')
+@click.option('--dataset_split',
+              default=None,
+              type=Optional[str],
+              help='The split of the dataset to evaluate')
+@click.option('--sampling_rate',
+              default=16000,
+              type=int,
+              help='The sampling rate of the audio')
 def evaluate(model_id: str,
              dataset_id: str,
              dataset_subset: Optional[str] = None,
@@ -20,6 +42,8 @@ def evaluate(model_id: str,
     '''Evaluate ASR models on a custom test dataset.
 
     Args:
+        model_id (str):
+            The ID of the model to evaluate.
         dataset_id (str):
             The ID of the dataset to evaluate.
         dataset_subset (str or None, optional):
@@ -80,6 +104,8 @@ def evaluate(model_id: str,
 
     # Evaluate the model
     metrics = trainer.evaluate(dataset)
+
+    print(metrics)
 
     # Return the metrics
     return metrics
@@ -145,12 +171,4 @@ def preprocess(examples: dict,
 
 
 if __name__ == '__main__':
-    model_ids = [
-        'saattrupdan/wav2vec2-xls-r-300m-cv8-da',
-        'saattrupdan/alvenir-wav2vec2-base-cv8-da',
-    ]
-
-    for model_id in model_ids:
-        scores = evaluate(model_id=model_id,
-                          dataset_id='data/alvenir-asr-test-set')
-        print(f'Scores for {model_id}: {scores}')
+    evaluate()
