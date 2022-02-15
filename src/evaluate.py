@@ -2,7 +2,7 @@
 
 from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC, Trainer
 import transformers.utils.logging as tf_logging
-from datasets.utils.logging as ds_logging
+import datasets.utils.logging as ds_logging
 from datasets import load_dataset as ds_load_dataset
 from datasets import Audio, Dataset
 from typing import Optional, Dict
