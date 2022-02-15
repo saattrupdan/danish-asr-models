@@ -140,8 +140,8 @@ def preprocess(examples: dict,
 
 if __name__ == '__main__':
     model_ids = [
+        'saattrupdan/wav2vec2-xls-r-300m-cv8-da',
         'saattrupdan/alvenir-wav2vec2-base-cv8-da',
-        'saattrupdan/wav2vec2-xls-r-300m-cv8-da'
     ]
 
     for model_id in model_ids:
