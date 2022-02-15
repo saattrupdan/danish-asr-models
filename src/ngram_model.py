@@ -26,9 +26,6 @@ def train_ngram_model(model_id: str,
         n (int, optional):
             The ngram order to use for training. Defaults to 5.
     '''
-    # Load the dataset
-    dataset = load_dataset(dataset_id, split=split)
-
     # Ensure that the data folder exists
     data_dir = Path('data')
     if not data_dir.exists():
@@ -38,6 +35,9 @@ def train_ngram_model(model_id: str,
     models_dir = Path('models')
     if not models_dir.exists():
         models_dir.mkdir()
+
+    # Load the dataset
+    dataset = load_dataset(dataset_id, split=split)
 
     # Dump dataset to a text file
     text_path = data_dir / 'text_data.txt'
