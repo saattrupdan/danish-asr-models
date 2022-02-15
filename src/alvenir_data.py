@@ -1,12 +1,14 @@
 '''Class used to load in the Alvenir test dataset'''
 
-from datasets import Dataset, Audio
+from datasets import Dataset, DatasetDict, Audio
 import pandas as pd
 from pathlib import Path
 from typing import Union
 
 
-def load_data(data_dir: Union[Path, str] = 'data/alvenir-test-set') -> Dataset:
+def load_data(
+        data_dir: Union[Path, str] = 'data/alvenir-test-set'
+    ) -> DatasetDict:
     '''Loads the Alvenir dataset.
 
     Args:
@@ -15,8 +17,8 @@ def load_data(data_dir: Union[Path, str] = 'data/alvenir-test-set') -> Dataset:
             'data/alvenir-test-set'.
 
     Returns:
-        Dataset:
-            The loaded dataset.
+        DatasetDict:
+            The loaded dataset, with 'train', 'validation' and 'test' as keys.
 
     Raises:
         FileNotFoundError:
@@ -36,7 +38,7 @@ def load_data(data_dir: Union[Path, str] = 'data/alvenir-test-set') -> Dataset:
                              header=0)
     metadata_1['supfolder'] = '20211116'
     metadata_2['supfolder'] = '20211125'
-    metadata = pd.concat([metadata_1, metadata_2])
+    metadata = pd.concat([metadata_1, metadata_2]).reset_index(drop=True)
 
     # Set up a `path` column and remove the `Folder`, `Subfolder` and `File
     # Name` columns
@@ -61,14 +63,34 @@ def load_data(data_dir: Union[Path, str] = 'data/alvenir-test-set') -> Dataset:
     }
     metadata.rename(columns=renaming_dict, inplace=True)
 
+    # Do stratified splits into train/val/test, based on the age
+    train = (metadata.groupby('age', group_keys=False)
+                     .apply(lambda x: x.sample(frac=0.8)))
+    val_test = metadata.loc[[idx for idx in metadata.index
+                             if idx not in train.index]]
+    val = (val_test.groupby('age', group_keys=False)
+                   .apply(lambda x: x.sample(frac=0.5)))
+    test = val_test.loc[[idx for idx in val_test.index
+                         if idx not in val.index]]
+
     # Convert the dataframe to a HuggingFace Dataset
-    dataset = Dataset.from_pandas(metadata, preserve_index=False)
+    train_dataset = Dataset.from_pandas(train, preserve_index=False)
+    val_dataset = Dataset.from_pandas(val, preserve_index=False)
+    test_dataset = Dataset.from_pandas(test, preserve_index=False)
 
     # Cast `path` as the audio path column
-    dataset = dataset.cast_column('audio', Audio())
+    train_dataset = train_dataset.cast_column('audio', Audio())
+    val_dataset = val_dataset.cast_column('audio', Audio())
+    test_dataset = test_dataset.cast_column('audio', Audio())
+
+    # Collect the datasets in a DatasetDict
+    dataset = DatasetDict(train=train_dataset,
+                          validation=val_dataset,
+                          test=test_dataset)
 
     return dataset
 
 
 if __name__ == '__main__':
-    load_data()
+    dataset = load_data()
+    breakpoint()
