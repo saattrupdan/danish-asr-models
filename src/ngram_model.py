@@ -26,8 +26,13 @@ def train_ngram_model(model_id: str,
     # Load the dataset
     dataset = load_dataset(dataset_id)
 
+    # Ensure that the data folder exists
+    data_dir = Path('data')
+    if not data_dir.exists():
+        data_dir.mkdir()
+
     # Dump dataset to a text file
-    text_path = Path('data/text_data.txt')
+    text_path = data_dir / 'text_data.txt'
     with open(text_path, 'w') as f:
         f.write(' '.join(dataset['text']))
 
@@ -35,7 +40,6 @@ def train_ngram_model(model_id: str,
     kenlm_dir = Path('kenlm')
     if not kenlm_dir.exists():
         os.system('wget -O - https://kheafield.com/code/kenlm.tar.gz | tar xz')
-
 
     # Compile `kenlm` if it hasn't already been compiled
     kenlm_build_dir = kenlm_dir / 'build'
@@ -46,11 +50,11 @@ def train_ngram_model(model_id: str,
                   'make -j2')
 
     # Train the n-gram language model
-    ngram_path = Path(f'data/raw_{n}gram.arpa')
+    ngram_path = data_dir / f'raw_{n}gram.arpa'
     os.system(f'kenlm/build/bin/lmplz -o {n} < "text.txt" > "{ngram_path}"')
 
     # Add end-of-sentence marker </s> to the n-gram language model
-    correct_ngram_path = Path(f'data/{n}gram.arpa')
+    correct_ngram_path = data_dir / f'{n}gram.arpa'
     with ngram_path.open('r') as f_in:
         with correct_ngram_path.open('w') as f_out:
 
