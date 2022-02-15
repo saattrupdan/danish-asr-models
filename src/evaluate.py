@@ -4,7 +4,7 @@ from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC, Trainer
 import transformers.utils.logging as tf_logging
 from datasets import load_dataset as ds_load_dataset
 from datasets import Audio, Dataset
-from typing import Optional, Dict
+from typing import Optional
 from unicodedata import normalize
 from functools import partial
 import re
@@ -14,61 +14,44 @@ from compute_metrics import compute_metrics
 
 
 @click.command()
-@click.option('--model_id',
-              '-m',
+@click.option('--model_id', '-m',
               type=str,
               help='The ID of the model to evaluate')
-@click.option('--dataset_id',
-              '-d',
+@click.option('--dataset_id', '-d',
               type=str,
               help='The ID of the dataset to evaluate')
 @click.option('--dataset_subset',
-              default=None,
-              type=Optional[str],
+              show_default=True,
+              default='',
+              type=str,
               help='The subset of the dataset to evaluate')
 @click.option('--dataset_split',
-              default=None,
-              type=Optional[str],
+              show_default=True,
+              default='test',
+              type=str,
               help='The split of the dataset to evaluate')
 @click.option('--sampling_rate',
-              default=16000,
+              show_default=True,
+              default=16_000,
               type=int,
               help='The sampling rate of the audio')
 def evaluate(model_id: str,
              dataset_id: str,
-             dataset_subset: Optional[str] = None,
-             dataset_split: Optional[str] = None,
-             sampling_rate: int = 16_000) -> Dict[str, float]:
-    '''Evaluate ASR models on a custom test dataset.
-
-    Args:
-        model_id (str):
-            The ID of the model to evaluate.
-        dataset_id (str):
-            The ID of the dataset to evaluate.
-        dataset_subset (str or None, optional):
-            The subset of the dataset to evaluate. If None then no subset will
-            be used. Defaults to None.
-        dataset_split (str or None, optional):
-            The split of the dataset to evaluate. If None then no split will be
-            used. Defaults to None.
-        sampling_rate (int, optional):
-            The sampling rate of the dataset. Defaults to 16_000.
-
-    Returns:
-        dict:
-            A dictionary with the metric names as keys and the metric values as
-            values.
-    '''
+             dataset_subset: str,
+             dataset_split: str,
+             sampling_rate: int):
+    '''Evaluate ASR models on a custom test dataset'''
     # Load the dataset
     try:
+        subset = None if dataset_subset == '' else dataset_subset
         dataset = ds_load_dataset(dataset_id,
-                                  dataset_subset,
-                                  split=dataset_split)
+                                  subset,
+                                  split=dataset_split,
+                                  use_auth_token=True)
     except ValueError:
         dataset = Dataset.from_file(f'{dataset_id}/dataset.arrow')
 
-    # Clean the transcriptions
+     # Clean the transcriptions
     dataset = dataset.map(clean_transcription)
 
     # Resample the audio
@@ -105,10 +88,9 @@ def evaluate(model_id: str,
     # Evaluate the model
     metrics = trainer.evaluate(dataset)
 
+    # Print the metrics
+    print(f'Scores for {model_id} on {dataset_id}:')
     print(metrics)
-
-    # Return the metrics
-    return metrics
 
 
 def clean_transcription(examples: dict) -> dict:
