@@ -131,6 +131,7 @@ dmypy.json
 # Data files
 **/*.json
 alvenir-wav2vec2-base-da-cv8/
+data/
 
 # MacOS
 .DS_Store
