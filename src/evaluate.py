@@ -22,12 +22,12 @@ from compute_metrics import compute_metrics
 @click.option('--dataset_id', '-d',
               type=str,
               help='The ID of the dataset to evaluate')
-@click.option('--dataset_subset',
+@click.option('--subset',
               show_default=True,
               default='',
               type=str,
               help='The subset of the dataset to evaluate')
-@click.option('--dataset_split',
+@click.option('--split',
               show_default=True,
               default='test',
               type=str,
@@ -43,17 +43,16 @@ from compute_metrics import compute_metrics
               help='Whether a language model should be used during decoding.')
 def evaluate(model_id: str,
              dataset_id: str,
-             dataset_subset: str,
-             dataset_split: str,
+             subset: str,
+             split: str,
              sampling_rate: int,
              use_lm: bool):
     '''Evaluate ASR models on a custom test dataset'''
     # Load the dataset
     try:
-        subset = None if dataset_subset == '' else dataset_subset
         dataset = ds_load_dataset(dataset_id,
-                                  subset,
-                                  split=dataset_split,
+                                  None if subset == '' else subset,
+                                  split=split,
                                   use_auth_token=True)
     except ValueError:
         dataset = Dataset.from_file(f'{dataset_id}/dataset.arrow')
