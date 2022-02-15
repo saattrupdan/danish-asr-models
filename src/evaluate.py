@@ -139,6 +139,12 @@ def preprocess(examples: dict,
 
 
 if __name__ == '__main__':
-    scores = evaluate(model_id='saattrupdan/wav2vec2-xls-r-300m-cv8-da',
-                      dataset_id='data/alvenir-asr-test-set')
-    print(scores)
+    model_ids = [
+        'saattrupdan/alvenir-wav2vec2-base-cv8-da',
+        'saattrupdan/wav2vec2-xls-r-300m-cv8-da'
+    ]
+
+    for model_id in model_ids:
+        scores = evaluate(model_id=model_id,
+                          dataset_id='data/alvenir-asr-test-set')
+        print(f'Scores for {model_id}: {scores}')
