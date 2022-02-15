@@ -72,6 +72,9 @@ def evaluate(model_id: str,
         tokenizer=processor.tokenizer
     )
 
+    # Disable most of the `transformers` logging
+    tf_logging.set_verbosity_error()
+
     # Remove trainer logging
     trainer.log = lambda _: None
 
