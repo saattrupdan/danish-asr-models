@@ -6,17 +6,17 @@ from pathlib import Path
 from typing import Union
 
 
-def load_data(data_dir: Union[Path, str] = 'data/alvenir-test-set') -> Dataset:
+def build_and_store_data(
+    data_dir: Union[Path, str] = 'data/alvenir-test-set',
+    output_name: str = 'data/alvenir-asr-test-set'):
     '''Loads the Alvenir dataset.
 
     Args:
         data_dir (str or Path, optional):
             The directory where the dataset is stored. Defaults to
             'data/alvenir-test-set'.
-
-    Returns:
-        Dataset:
-            The loaded dataset.
+        output_name (str, optional):
+            The name of the dataset. Defaults to 'data/alvenir-asr-test-set'.
 
     Raises:
         FileNotFoundError:
@@ -56,7 +56,7 @@ def load_data(data_dir: Union[Path, str] = 'data/alvenir-test-set') -> Dataset:
         'Age': 'age',
         'Age Range': 'age_range',
         'Corpus Code': 'corpus_code',
-        'Prompt': 'text',
+        'Prompt': 'sentence',
         'QA Result': 'qa_result'
     }
     metadata.rename(columns=renaming_dict, inplace=True)
@@ -67,9 +67,9 @@ def load_data(data_dir: Union[Path, str] = 'data/alvenir-test-set') -> Dataset:
     # Cast `path` as the audio path column
     dataset = dataset.cast_column('audio', Audio())
 
-    return dataset
+    # Store the dataset
+    dataset.save_to_disk(output_name)
 
 
 if __name__ == '__main__':
-    dataset = load_data()
-    breakpoint()
+    build_and_store_data()
