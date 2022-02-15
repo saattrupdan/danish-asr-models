@@ -2,7 +2,6 @@
 
 from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC, Trainer
 import transformers.utils.logging as tf_logging
-import datasets.utils.logging as ds_logging
 from datasets import load_dataset as ds_load_dataset
 from datasets import Audio, Dataset
 from typing import Optional, Dict
@@ -37,9 +36,8 @@ def evaluate(model_id: str,
             A dictionary with the metric names as keys and the metric values as
             values.
     '''
-    # Disable most of the `transformers` and `datasets` logging
+    # Disable most of the `transformers` logging
     tf_logging.set_verbosity_error()
-    ds_logging.get_verbosity = lambda: ds_logging.NOTSET
 
     # Load the dataset
     try:
