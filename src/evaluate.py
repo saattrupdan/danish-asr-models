@@ -1,12 +1,14 @@
 '''Evaluate ASR models on a custom test dataset'''
 
-from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC
+from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC, Trainer
 from datasets import load_dataset as ds_load_dataset
 from datasets import Audio, Dataset
 from typing import Optional, Dict
 from unicodedata import normalize
 from functools import partial
 import re
+from data_collator import DataCollatorCTCWithPadding
+from compute_metrics import compute_metrics
 
 
 def evaluate(model_id: str,
@@ -56,8 +58,22 @@ def evaluate(model_id: str,
     preprocess_fn = partial(preprocess, processor=processor)
     dataset = dataset.map(preprocess_fn)
 
+    # Initialise data collator
+    data_collator = DataCollatorCTCWithPadding(processor=dataset.processor,
+                                               padding='longest')
+
+    # Initialise the trainer
+    trainer = Trainer(
+        model=model,
+        data_collator=data_collator,
+        compute_metrics=partial(compute_metrics, processor=dataset.processor),
+        eval_dataset=dataset,
+        tokenizer=processor.tokenizer
+    )
+
+
     # Evaluate the model
-    metrics = model.evaluate(dataset)
+    metrics = trainer.evaluate(dataset)
 
     # Return the metrics
     return metrics
