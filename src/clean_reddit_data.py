@@ -4,6 +4,8 @@ from datasets import load_dataset
 from pathlib import Path
 import json
 from functools import partial
+from unicodedata import normalize
+import re
 
 
 def clean_and_upload_reddit_data():
@@ -37,6 +39,7 @@ def clean_texts(examples: dict, vocab: dict) -> dict:
     '''
     # Remove links
     examples['text'] = re.sub(r'http[^ ]*', '', examples['text'])
+    examples['text'] = re.sub(r'www\.[^ ]*', '', examples['text'])
     examples['text'] = re.sub(r'\[[Ll][Ii][Nn][Kk]\]', '', examples['text'])
 
     # NFKC normalize the transcriptions
