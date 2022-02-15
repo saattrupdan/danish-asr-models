@@ -41,11 +41,5 @@ def compute_metrics(pred: EvalPrediction,
     # Compute the word error rate
     wer = wer_metric.compute(predictions=pred_str, references=label_str)
 
-    print()
-    for label, prediction in it.islice(zip(label_str, pred_str), 3):
-        print(f'Ground truth = "{label}"')
-        print(f'Predicted = "{prediction}"')
-        print()
-
     # Return the word error rate
     return dict(wer=wer)
