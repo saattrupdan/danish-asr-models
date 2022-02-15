@@ -54,7 +54,7 @@ def train_ngram_model(model_id: str,
 
     # Train the n-gram language model
     ngram_path = data_dir / f'raw_{n}gram.arpa'
-    os.system(f'kenlm/build/bin/lmplz -o {n} < "text.txt" > "{ngram_path}"')
+    os.system(f'kenlm/build/bin/lmplz -o {n} < "{text_path}" > "{ngram_path}"')
 
     # Add end-of-sentence marker </s> to the n-gram language model
     correct_ngram_path = data_dir / f'{n}gram.arpa'
