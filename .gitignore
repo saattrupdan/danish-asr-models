@@ -138,3 +138,6 @@ data/
 
 # KenLM folder
 kenlm/
+
+# Repos
+wav2vec2-xls-r-300m-cv8-da/
