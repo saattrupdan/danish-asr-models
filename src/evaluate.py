@@ -1,10 +1,12 @@
 '''Evaluate ASR models on a custom test dataset'''
 
-from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC, Trainer
+from transformers import (Wav2Vec2Processor,
+                          Wav2Vec2ProcessorWithLM,
+                          Wav2Vec2ForCTC,
+                          Trainer)
 import transformers.utils.logging as tf_logging
 from datasets import load_dataset as ds_load_dataset
 from datasets import Audio, Dataset
-from typing import Optional
 from unicodedata import normalize
 from functools import partial
 import re
@@ -35,11 +37,16 @@ from compute_metrics import compute_metrics
               default=16_000,
               type=int,
               help='The sampling rate of the audio')
+@click.option('--use_lm',
+              is_flag=True,
+              show_default=True,
+              help='Whether a language model should be used during decoding.')
 def evaluate(model_id: str,
              dataset_id: str,
              dataset_subset: str,
              dataset_split: str,
-             sampling_rate: int):
+             sampling_rate: int,
+             use_lm: bool):
     '''Evaluate ASR models on a custom test dataset'''
     # Load the dataset
     try:
@@ -59,7 +66,10 @@ def evaluate(model_id: str,
     dataset = dataset.cast_column('audio', audio)
 
     # Load the pretrained processor and model
-    processor = Wav2Vec2Processor.from_pretrained(model_id)
+    if use_lm:
+        processor = Wav2Vec2ProcessorWithLM.from_pretrained(model_id)
+    else:
+        processor = Wav2Vec2Processor.from_pretrained(model_id)
     model = Wav2Vec2ForCTC.from_pretrained(model_id)
 
     # Preprocess the dataset
