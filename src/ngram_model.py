@@ -10,6 +10,7 @@ import os
 
 def train_ngram_model(model_id: str,
                       dataset_id: str = 'DDSC/reddit-da-asr-preprocessed',
+                      split: str = 'train',
                       n: int = 5):
     '''Trains an ngram language model.
 
@@ -20,11 +21,13 @@ def train_ngram_model(model_id: str,
         dataset_id (str, optional):
             The dataset to use for training. Defaults to
             'DDSC/reddit-da-asr-preprocessed'.
+        split (str, optional):
+            The split to use for training. Defaults to 'train'.
         n (int, optional):
             The ngram order to use for training. Defaults to 5.
     '''
     # Load the dataset
-    dataset = load_dataset(dataset_id)
+    dataset = load_dataset(dataset_id, split=split)
 
     # Ensure that the data folder exists
     data_dir = Path('data')
