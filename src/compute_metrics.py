@@ -4,7 +4,6 @@ import numpy as np
 from transformers import Wav2Vec2Processor, EvalPrediction
 from datasets import load_metric
 from typing import Dict
-import itertools as it
 
 
 def compute_metrics(pred: EvalPrediction,
