@@ -130,14 +130,13 @@ dmypy.json
 
 # Data files
 **/*.json
-alvenir-wav2vec2-base-da-cv8/
 data/
+
+# Model files
+models/
 
 # MacOS
 .DS_Store
 
 # KenLM folder
 kenlm/
-
-# Repos
-wav2vec2-xls-r-300m-cv8-da/
