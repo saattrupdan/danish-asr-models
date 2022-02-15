@@ -34,6 +34,11 @@ def train_ngram_model(model_id: str,
     if not data_dir.exists():
         data_dir.mkdir()
 
+    # Ensure that the models folder exists
+    models_dir = Path('models')
+    if not models_dir.exists():
+        models_dir.mkdir()
+
     # Dump dataset to a text file
     text_path = data_dir / 'text_data.txt'
     with open(text_path, 'w') as f:
@@ -53,12 +58,12 @@ def train_ngram_model(model_id: str,
                   'make -j2')
 
     # Train the n-gram language model if it doesn't already exist
-    ngram_path = data_dir / f'raw_{n}gram.arpa'
-    correct_ngram_path = data_dir / f'{n}gram.arpa'
+    correct_ngram_path = models_dir / f'{n}gram.arpa'
     if not correct_ngram_path.exists():
 
         # If the raw language model does not exist either, then train from
         # scratch
+        ngram_path = models_dir / f'raw_{n}gram.arpa'
         if not ngram_path.exists():
             os.system(f'kenlm/build/bin/lmplz -o {n} < '
                       f'"{text_path}" > '
@@ -90,9 +95,9 @@ def train_ngram_model(model_id: str,
                     else:
                         f_out.write(line)
 
-    # Remove non-correct ngram path
-    if ngram_path.exists():
-        ngram_path.unlink()
+        # Remove non-correct ngram model again
+        if ngram_path.exists():
+            ngram_path.unlink()
 
     # Load the pretrained processor
     processor = AutoProcessor.from_pretrained(model_id)
@@ -114,7 +119,7 @@ def train_ngram_model(model_id: str,
     )
 
     # Clone the repo containing the finetuned model
-    repo_dir = Path(model_id.split('/')[-1])
+    repo_dir = models_dir / model_id.split('/')[-1]
     repo = Repository(local_dir=str(repo_dir), clone_from=model_id)
 
     # Save the new processor to the repo
