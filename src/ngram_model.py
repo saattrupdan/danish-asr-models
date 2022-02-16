@@ -1,7 +1,7 @@
 '''Language model to boost performance of the speech recognition model'''
 
 from transformers import AutoProcessor, Wav2Vec2ProcessorWithLM
-from datasets import load_dataset
+from datasets import load_dataset, Dataset
 from huggingface_hub import Repository
 from pyctcdecode import build_ctcdecoder
 from pathlib import Path
@@ -37,7 +37,10 @@ def train_ngram_model(model_id: str,
         models_dir.mkdir()
 
     # Load the dataset
-    dataset = load_dataset(dataset_id, split=split)
+    try:
+        dataset = load_dataset(dataset_id, split=split)
+    except ValueError:
+        dataset = Dataset.from_file(f'{dataset_id}/dataset.arrow')
 
     # Dump dataset to a text file
     text_path = data_dir / 'text_data.txt'
@@ -140,4 +143,5 @@ def train_ngram_model(model_id: str,
 
 
 if __name__ == '__main__':
-    train_ngram_model('saattrupdan/wav2vec2-xls-r-300m-cv8-da')
+    train_ngram_model('saattrupdan/wav2vec2-xls-r-300m-cv8-da',
+                      dataset_id='data/lexdk-preprocessed')
