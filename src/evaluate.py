@@ -37,16 +37,11 @@ from compute_metrics import compute_metrics
               default=16_000,
               type=int,
               help='The sampling rate of the audio')
-@click.option('--use_lm',
-              is_flag=True,
-              show_default=True,
-              help='Whether a language model should be used during decoding.')
 def evaluate(model_id: str,
              dataset_id: str,
              subset: str,
              split: str,
-             sampling_rate: int,
-             use_lm: bool):
+             sampling_rate: int):
     '''Evaluate ASR models on a custom test dataset'''
     # Load the dataset
     try:
@@ -65,9 +60,9 @@ def evaluate(model_id: str,
     dataset = dataset.cast_column('audio', audio)
 
     # Load the pretrained processor and model
-    if use_lm:
+    try:
         processor = Wav2Vec2ProcessorWithLM.from_pretrained(model_id)
-    else:
+    except FileNotFoundError:
         processor = Wav2Vec2Processor.from_pretrained(model_id)
     model = Wav2Vec2ForCTC.from_pretrained(model_id)
 
