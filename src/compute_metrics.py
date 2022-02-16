@@ -34,14 +34,6 @@ def compute_metrics(pred: EvalPrediction,
     # Get the ids of the predictions
     pred_logits = pred.predictions
 
-    # If the processor has a vocab of exactly two more tokens then assume these
-    # are <s> and </s>, and we add zero probability logits to these to match
-    # the dimensions
-    if pred_logits.shape[-1] + 2 == len(processor.tokenizer.get_vocab()):
-        zero_logits = np.full((pred_logits.shape[0], pred_logits.shape[1], 2),
-                              fill_value=-1e10)
-        pred_logits = np.concatenate((pred_logits, zero_logits), axis=-1)
-
     # Decode the predictions, to get the transcriptions
     if isinstance(processor, Wav2Vec2ProcessorWithLM):
         pred_str = processor.batch_decode(pred_logits).text
@@ -52,6 +44,13 @@ def compute_metrics(pred: EvalPrediction,
     # Decode the ground truth labels
     label_str = processor.tokenizer.batch_decode(pred.label_ids,
                                                  group_tokens=False)
+
+    import itertools as it
+    for label, pred in it.islice(zip(label_str, pred_str), 10):
+        print()
+        print(label)
+        print(pred)
+        print()
 
     # Compute the word error rate
     wer = wer_metric.compute(predictions=pred_str, references=label_str)
