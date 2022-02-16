@@ -55,6 +55,9 @@ def evaluate(model_id: str,
      # Clean the transcriptions
     dataset = dataset.map(clean_transcription)
 
+    # TEMP
+    dataset = Dataset.from_dict(dataset[:10])
+
     # Resample the audio
     audio = Audio(sampling_rate=sampling_rate)
     dataset = dataset.cast_column('audio', audio)
