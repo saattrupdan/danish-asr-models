@@ -38,9 +38,9 @@ from compute_metrics import compute_metrics
               type=int,
               help='The sampling rate of the audio')
 @click.option('--no_lm',
-              show_default=True,
+              is_flag=True,
               default=False,
-              type=bool,
+              show_default=True,
               help='Whether no language model should be used during decoding')
 def evaluate(model_id: str,
              dataset_id: str,
