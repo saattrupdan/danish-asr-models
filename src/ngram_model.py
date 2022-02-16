@@ -5,6 +5,7 @@ from datasets import load_dataset, Dataset
 from huggingface_hub import Repository
 from pyctcdecode import build_ctcdecoder
 from pathlib import Path
+from shutil import rmtree
 import os
 
 
@@ -124,6 +125,11 @@ def train_ngram_model(model_id: str,
     # Clone the repo containing the finetuned model
     repo_dir = models_dir / model_id.split('/')[-1]
     repo = Repository(local_dir=str(repo_dir), clone_from=model_id)
+
+    # Remove the previous language model if it exists
+    lang_model_dir = repo_dir / 'language_model'
+    if lang_model_dir.exists():
+        rmtree(str(lang_model_dir))
 
     # Save the new processor to the repo
     processor_with_lm.save_pretrained(str(repo_dir))
