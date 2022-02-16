@@ -55,9 +55,6 @@ def evaluate(model_id: str,
      # Clean the transcriptions
     dataset = dataset.map(clean_transcription)
 
-    # TEMP
-    dataset = Dataset.from_dict(dataset[:10])
-
     # Resample the audio
     audio = Audio(sampling_rate=sampling_rate)
     dataset = dataset.cast_column('audio', audio)
@@ -95,9 +92,12 @@ def evaluate(model_id: str,
     # Evaluate the model
     metrics = trainer.evaluate(dataset)
 
+    # Extract the WER
+    wer = 100 * metrics['eval_wer']
+
     # Print the metrics
-    print(f'Scores for {model_id} on {dataset_id}:')
-    print(metrics)
+    print(f'\n*** RESULTS ON {dataset_id.split("/")[-1].upper()} ***')
+    print(f'{model_id} achieved a WER of {wer:.2f}.\n')
 
 
 def clean_transcription(examples: dict) -> dict:

@@ -1,19 +1,23 @@
 '''Function to compute the metrics for speech recognition models'''
 
 import numpy as np
-from transformers import Wav2Vec2Processor, EvalPrediction
+from transformers import (Wav2Vec2Processor,
+                          Wav2Vec2ProcessorWithLM,
+                          EvalPrediction)
 from datasets import load_metric
-from typing import Dict
+from typing import Dict, Union
 
 
 def compute_metrics(pred: EvalPrediction,
-                    processor: Wav2Vec2Processor) -> Dict[str, float]:
+                    processor: Union[Wav2Vec2Processor,
+                                     Wav2Vec2ProcessorWithLM]
+                    ) -> Dict[str, float]:
     '''Compute the word error rate of predictions.
 
     Args:
         pred (EvalPrediction):
             Prediction output of the speech recognition model.
-        processor (Wav2Vec2Processor):
+        processor (Wav2Vec2Processor or Wav2Vec2ProcessorWithLM):
             Audio and transcription processor.
 
     Returns:
@@ -24,18 +28,30 @@ def compute_metrics(pred: EvalPrediction,
     # Intitialise the metric
     wer_metric = load_metric('wer')
 
-    # Get the ids of the predictions
-    pred_logits = pred.predictions
-    pred_ids = np.argmax(pred_logits, axis=-1)
-
-    # Decode the predictions to get the transcriptions
-    pred_str = processor.batch_decode(pred_ids)
-
     # Set the ground truth labels with label id -100 to be the padding token id
     pred.label_ids[pred.label_ids == -100] = processor.tokenizer.pad_token_id
 
+    # Get the ids of the predictions
+    pred_logits = pred.predictions
+
+    # If the processor has a vocab of exactly two more tokens then assume these
+    # are <s> and </s>, and we add zero probability logits to these to match
+    # the dimensions
+    if pred_logits.shape[-1] + 2 == len(processor.tokenizer.get_vocab()):
+        zero_logits = np.full((pred_logits.shape[0], pred_logits.shape[1], 2),
+                              fill_value=-1e10)
+        pred_logits = np.concatenate((pred_logits, zero_logits), axis=-1)
+
+    # Decode the predictions, to get the transcriptions
+    if isinstance(processor, Wav2Vec2ProcessorWithLM):
+        pred_str = processor.batch_decode(pred_logits).text
+    else:
+        pred_ids = np.argmax(pred_logits, axis=-1)
+        pred_str = processor.batch_decode(pred_ids)
+
     # Decode the ground truth labels
-    label_str = processor.batch_decode(pred.label_ids, group_tokens=False)
+    label_str = processor.tokenizer.batch_decode(pred.label_ids,
+                                                 group_tokens=False)
 
     # Compute the word error rate
     wer = wer_metric.compute(predictions=pred_str, references=label_str)
