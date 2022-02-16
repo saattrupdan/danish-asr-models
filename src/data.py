@@ -236,9 +236,11 @@ class AudioDataset:
         # Form the vocabulary dictionary
         vocab = {char: idx for idx, char in enumerate(unique_characters)}
 
-        # Manually add the special tokens <unk> and <pad>
+        # Manually add special tokens
         vocab['<unk>'] = len(vocab)
         vocab['<pad>'] = len(vocab)
+        vocab['<s>'] = len(vocab)
+        vocab['</s>'] = len(vocab)
 
         # Dump the vocabulary to a json file
         with Path('vocab.json').open('w') as f:
