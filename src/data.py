@@ -213,7 +213,8 @@ class AudioDataset:
         examples['input_length'] = len(examples['input_values'])
 
         # Preprocess labels
-        examples['labels'] = self.tokenizer.encode(list(examples['sentence']))
+        with self.processor.as_target_processor():
+            examples["labels"] = self.processor(examples["sentence"]).input_ids
 
         # Return the preprocessed examples
         return examples
