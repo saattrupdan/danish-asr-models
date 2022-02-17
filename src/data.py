@@ -179,7 +179,7 @@ class AudioDataset:
         examples['sentence'] = normalize('NFKC', examples['sentence'])
 
         # Remove punctuation
-        regex = r'[\[\]\{\}\(\)\,\?\.\!\-\—\–\;\:\"\“\%\”\�]'
+        regex = r'[\[\]\{\}\(\)\,\?\.\!\-\—\–\;\:\"\“\'\%\”\�]'
         examples['sentence'] = re.sub(regex, '', examples['sentence'])
 
         # Replace spaces with a pipe, to emphasise the word boundaries
