@@ -32,34 +32,35 @@ class Config(BaseModel):
             then both a validation and test set will be created from the train
             dataset. Defaults to 'test'.
         attention_dropout (float, optional):
-            The dropout rate for the attention layer. Defaults to 0.0.
+            The dropout rate for the attention layer. Defaults to 0.1.
         hidden_dropout (float, optional):
-            The dropout rate for the hidden layer. Defaults to 0.0.
+            The dropout rate for the hidden layer. Defaults to 0.1.
         feat_proj_dropout (float, optional):
-            The dropout rate for the feature projection layer. Defaults to 0.0.
+            The dropout rate for the feature projection layer. Defaults to 0.1.
         final_dropout (float, optional):
-            The dropout rate for the final layer. Defaults to 0.0.
+            The dropout rate for the final layer. Defaults to 0.1.
         mask_time_prob (float, optional):
-            The probability of masking the time dimension. Defaults to 0.05.
+            The probability of masking the time dimension. Defaults to 0.075.
         mask_feature_prob (float, optional):
-            The probability of masking the feature dimension. Defaults to 0.0.
+            The probability of masking the feature dimension. Defaults to
+            0.075.
         layerdrop (float, optional):
-            The dropout rate for the layers. Defaults to 0.0.
+            The dropout rate for the layers. Defaults to 0.1.
         ctc_loss_reduction (str, optional):
-            The reduction to use for the CTC loss. Defaults to 'mean'.
+            The reduction to use for the CTC loss. Defaults to 'sum'.
         freeze_feature_encoder (bool, optional):
             Whether to freeze the feature encoder. Defaults to False.
         batch_size (int, optional):
-            The batch size for training. Defaults to 16.
+            The batch size for training. Defaults to 4.
         gradient_accumulation_steps (int, optional):
-            The number of steps to accumulate gradients for. Defaults to 2.
+            The number of steps to accumulate gradients for. Defaults to 8.
         epochs (int, optional):
-            The number of epochs to train for. Defaults to 100.
+            The number of epochs to train for. Defaults to 500.
         learning_rate (float, optional):
-            The learning rate for the optimizer. Defaults to 3e-4.
+            The learning rate for the optimizer. Defaults to 4e-5.
         warmup_steps (int, optional):
             The number of warmup steps for the learning rate scheduler.
-            Defaults to 100.
+            Defaults to 500.
         early_stopping (bool, optional):
             Whether to use early stopping. Defaults to True.
         early_stopping_patience (int, optional):
@@ -84,22 +85,22 @@ class Config(BaseModel):
     test_name: Optional[str] = 'test'
 
     # Model hyperparameters
-    attention_dropout: float = 0.0
-    hidden_dropout: float = 0.0
-    feat_proj_dropout: float = 0.0
-    final_dropout: float = 0.0
-    mask_time_prob: float = 0.05
-    mask_feature_prob: float = 0.0
-    layerdrop: float = 0.0
-    ctc_loss_reduction: str = 'mean'
+    attention_dropout: float = 0.1
+    hidden_dropout: float = 0.1
+    feat_proj_dropout: float = 0.1
+    final_dropout: float = 0.1
+    mask_time_prob: float = 0.075
+    mask_feature_prob: float = 0.075
+    layerdrop: float = 0.1
+    ctc_loss_reduction: str = 'sum'
     freeze_feature_encoder: bool = False
 
     # Training hyperparameters
-    batch_size: int = 16
-    gradient_accumulation_steps: int = 2
-    epochs: int = 100
-    learning_rate: float = 3e-4
-    warmup_steps: int = 100
+    batch_size: int = 4
+    gradient_accumulation_steps: int = 8
+    epochs: int = 500
+    learning_rate: float = 4e-5
+    warmup_steps: int = 500
     early_stopping: bool = True
     early_stopping_patience: int = 5
     fp16: bool = True
