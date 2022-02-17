@@ -83,8 +83,7 @@ class AudioDataset:
             pad_token='<pad>',
             bos_token='<s>',
             eos_token='</s>',
-            word_delimiter_token='|',
-            do_lower_case=True
+            word_delimiter_token='|'
         )
 
         # Initialise the feature extractor
