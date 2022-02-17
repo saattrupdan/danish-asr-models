@@ -64,7 +64,9 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
         layerdrop=config.layerdrop,
         ctc_loss_reduction=config.ctc_loss_reduction,
         pad_token_id=dataset.tokenizer.pad_token_id,
-        vocab_size=len(dataset.tokenizer.get_vocab())
+        vocab_size=len(dataset.tokenizer.get_vocab()),
+        bos_token_id=dataset.tokenizer.bos_token_id,
+        eos_token_id=dataset.tokenizer.eos_token_id,
     )
 
     # Freeze the feature encoder
