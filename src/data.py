@@ -77,8 +77,8 @@ class AudioDataset:
     def initialise_preprocessor(self):
         '''Initialise the preprocessor'''
         # Intialise the tokenizer
-        self.tokenizer = Wav2Vec2CTCTokenizer(
-            vocab_file='vocab.json',
+        self.tokenizer = Wav2Vec2CTCTokenizer.from_pretrained(
+            './',
             unk_token='<unk>',
             pad_token='<pad>',
             bos_token='<s>',
