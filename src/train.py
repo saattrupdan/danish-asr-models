@@ -64,7 +64,7 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
         layerdrop=config.layerdrop,
         ctc_loss_reduction=config.ctc_loss_reduction,
         pad_token_id=dataset.tokenizer.pad_token_id,
-        vocab_size=len(dataset.tokenizer)
+        vocab_size=len(dataset.tokenizer.get_vocab())
     )
 
     # Freeze the feature encoder
@@ -92,7 +92,8 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
         length_column_name='input_length',
         load_best_model_at_end=config.early_stopping,
         metric_for_best_model='wer',
-        greater_is_better=False
+        greater_is_better=False,
+        seed=4242
     )
 
     # Create early stopping callback
