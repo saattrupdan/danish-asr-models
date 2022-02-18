@@ -71,7 +71,7 @@ def evaluate(model_id: str,
     else:
         try:
             processor = Wav2Vec2ProcessorWithLM.from_pretrained(model_id)
-        except FileNotFoundError:
+        except (FileNotFoundError, ValueError):
             processor = Wav2Vec2Processor.from_pretrained(model_id)
     model = Wav2Vec2ForCTC.from_pretrained(model_id)
 
