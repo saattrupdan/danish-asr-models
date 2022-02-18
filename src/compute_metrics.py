@@ -28,11 +28,19 @@ def compute_metrics(pred: EvalPrediction,
     # Intitialise the metric
     wer_metric = load_metric('wer')
 
+    # Get the padding token
+    pad_token = processor.tokenizer.pad_token_id
+
     # Set the ground truth labels with label id -100 to be the padding token id
-    pred.label_ids[pred.label_ids == -100] = processor.tokenizer.pad_token_id
+    pred.label_ids[pred.label_ids == -100] = pad_token
 
     # Get the ids of the predictions
     pred_logits = pred.predictions
+
+    # In cases where the logits are -100 for all characters, convert the logits
+    # for the padding character to be 1, to make sure that padding is chosen
+    pad_arr = pred.predictions[:, :, pad_token]
+    pred.predictions[:, :, pad_token] = np.where(pad_arr == -100, 1, pad_arr)
 
     # Decode the predictions, to get the transcriptions
     if isinstance(processor, Wav2Vec2ProcessorWithLM):
