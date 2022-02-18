@@ -74,6 +74,8 @@ class AudioDataset:
         self.val = self.val.map(self._preprocess)
         self.test = self.test.map(self._preprocess)
 
+        return self
+
     def initialise_preprocessor(self):
         '''Initialise the preprocessor'''
         # Intialise the tokenizer
@@ -100,6 +102,8 @@ class AudioDataset:
             feature_extractor=self.extractor,
             tokenizer=self.tokenizer
         )
+
+        return self
 
     def _load_dataset(self) -> Tuple[Dataset, Dataset, Dataset]:
         '''Loads a dataset.
