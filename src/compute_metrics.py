@@ -38,9 +38,9 @@ def compute_metrics(pred: EvalPrediction,
     pred_logits = pred.predictions
 
     # In cases where the logits are -100 for all characters, convert the logits
-    # for the padding character to be 1, to make sure that padding is chosen
+    # for the padding character to be 100, to make sure that padding is chosen
     pad_arr = pred.predictions[:, :, pad_token]
-    pred.predictions[:, :, pad_token] = np.where(pad_arr == -100, 1, pad_arr)
+    pred.predictions[:, :, pad_token] = np.where(pad_arr == -100, 100, pad_arr)
 
     # Decode the predictions, to get the transcriptions
     if isinstance(processor, Wav2Vec2ProcessorWithLM):
