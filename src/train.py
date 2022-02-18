@@ -123,7 +123,7 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
     dataset.processor.save_pretrained(config.finetuned_model_id.split('/')[-1])
 
     # Train the model
-    trainer.train()
+    trainer.train(resume_from_checkpoint=config.resume_from_checkpoint)
 
     # Save the model
     model.save_pretrained(config.finetuned_model_id.split('/')[-1])
@@ -138,7 +138,8 @@ if __name__ == '__main__':
 
     xlsr_300m_config = Config(
         pretrained_model_id='facebook/wav2vec2-xls-r-300m',
-        finetuned_model_id='saattrupdan/wav2vec2-xls-r-300m-cv8-da'
+        finetuned_model_id='saattrupdan/wav2vec2-xls-r-300m-cv8-da',
+        resume_from_checkpoint=True
     )
 
     alvenir_config = Config(

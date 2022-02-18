@@ -71,6 +71,8 @@ class Config(BaseModel):
             only possible if GPU is enabled. Defaults to True.
         push_to_hub (bool, optional):
             Whether to push the model to the hub. Defaults to True.
+        resume_from_checkpoint (bool, optional):
+            Whether to resume training from a checkpoint. Defaults to False.
     '''
     # Model IDs
     pretrained_model_id: str
@@ -105,3 +107,4 @@ class Config(BaseModel):
     early_stopping_patience: int = 5
     fp16: bool = True
     push_to_hub: bool = True
+    resume_from_checkpoint: bool = False
