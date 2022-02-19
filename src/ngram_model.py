@@ -69,8 +69,8 @@ def train_ngram_model(model_id: str,
         # scratch
         ngram_path = models_dir / f'raw_{n}gram.arpa'
         if not ngram_path.exists():
-            os.system(f'kenlm/build/bin/lmplz -o {n} < '
-                      f'"{text_path}" > '
+            os.system(f'kenlm/build/bin/lmplz -o {n} <'
+                      f'"{text_path}" >'
                       f'"{ngram_path}"')
 
         # Add end-of-sentence marker </s> to the n-gram language model to get
