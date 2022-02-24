@@ -148,4 +148,16 @@ if __name__ == '__main__':
         final_dropout=0.3
     )
 
-    train(xlsr_300m_config)
+    voxrex_config = Config(
+        pretrained_model_id='KBLab/wav2vec2-large-voxrex',
+        finetuned_model_id='saattrupdan/kblab-voxrex-wav2vec2-large-cv8-da',
+        final_dropout=0.3
+    )
+
+    voxpopuli_config = Config(
+        pretrained_model_id='facebook/wav2vec2-large-sv-voxpopuli',
+        finetuned_model_id='saattrupdan/voxpopuli-wav2vec2-large-cv8-da',
+        final_dropout=0.3
+    )
+
+    train(voxrex_config)
