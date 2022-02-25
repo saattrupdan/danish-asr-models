@@ -55,12 +55,14 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
     # Initialise the model
     model = Wav2Vec2ForCTC.from_pretrained(
         config.pretrained_model_id,
+        activation_dropout=config.activation_dropout,
         attention_dropout=config.attention_dropout,
         hidden_dropout=config.hidden_dropout,
         feat_proj_dropout=config.feat_proj_dropout,
         final_dropout=config.final_dropout,
         mask_time_prob=config.mask_time_prob,
         mask_feature_prob=config.mask_feature_prob,
+        mask_feature_length=config.mask_feature_length,
         layerdrop=config.layerdrop,
         ctc_loss_reduction=config.ctc_loss_reduction,
         pad_token_id=dataset.tokenizer.pad_token_id,
@@ -151,7 +153,9 @@ if __name__ == '__main__':
     voxrex_config = Config(
         pretrained_model_id='KBLab/wav2vec2-large-voxrex',
         finetuned_model_id='saattrupdan/kblab-voxrex-wav2vec2-large-cv8-da',
-        final_dropout=0.3
+        final_dropout=0.3,
+        mask_feature_prob=0.25,
+        mask_feature_length=64
     )
 
     voxpopuli_config = Config(

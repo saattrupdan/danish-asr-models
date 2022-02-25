@@ -31,6 +31,8 @@ class Config(BaseModel):
             the train dataset. If a validation set is not available either,
             then both a validation and test set will be created from the train
             dataset. Defaults to 'test'.
+        activation_dropout (float, optional):
+            The dropout rate for the activation layer. Defaults to 0.1.
         attention_dropout (float, optional):
             The dropout rate for the attention layer. Defaults to 0.1.
         hidden_dropout (float, optional):
@@ -44,6 +46,9 @@ class Config(BaseModel):
         mask_feature_prob (float, optional):
             The probability of masking the feature dimension. Defaults to
             0.075.
+        mask_feature_length (int, optional):
+            The length of the masking of the feature dimension. Defaults to
+            10.
         layerdrop (float, optional):
             The dropout rate for the layers. Defaults to 0.1.
         ctc_loss_reduction (str, optional):
@@ -87,12 +92,14 @@ class Config(BaseModel):
     test_name: Optional[str] = 'test'
 
     # Model hyperparameters
+    activation_dropout: float = 0.1
     attention_dropout: float = 0.1
     hidden_dropout: float = 0.1
     feat_proj_dropout: float = 0.1
     final_dropout: float = 0.1
     mask_time_prob: float = 0.075
     mask_feature_prob: float = 0.075
+    mask_feature_length: int = 10
     layerdrop: float = 0.1
     ctc_loss_reduction: str = 'sum'
     freeze_feature_encoder: bool = False
