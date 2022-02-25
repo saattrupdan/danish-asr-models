@@ -8,7 +8,7 @@ import tarfile
 
 def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech.tar.gz',
                          output_path: Union[Path, str] = 'data/ftspeech'):
-    '''Loads the Alvenir dataset.
+    '''Loads the FTSpeech dataset.
 
     Args:
         input_path (str or Path, optional):
@@ -46,7 +46,7 @@ def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech.tar.gz',
     dataset = dataset.cast_column('audio', Audio())
 
     # Store the dataset
-    dataset.save_to_disk(output_name)
+    dataset.save_to_disk(str(output_path))
 
 
 if __name__ == '__main__':
