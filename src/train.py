@@ -153,9 +153,7 @@ if __name__ == '__main__':
     voxrex_config = Config(
         pretrained_model_id='KBLab/wav2vec2-large-voxrex',
         finetuned_model_id='saattrupdan/kblab-voxrex-wav2vec2-large-cv8-da',
-        final_dropout=0.3,
-        mask_feature_prob=0.25,
-        mask_feature_length=64
+        final_dropout=0.3
     )
 
     voxpopuli_config = Config(
@@ -164,4 +162,4 @@ if __name__ == '__main__':
         final_dropout=0.3
     )
 
-    train(voxrex_config)
+    train(voxpopuli_config)
