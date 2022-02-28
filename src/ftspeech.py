@@ -8,6 +8,7 @@ from pydub import AudioSegment
 from tqdm.auto import tqdm
 from joblib import delayed, Parallel
 import multiprocessing as mp
+import warnings
 
 
 def preprocess_transcription(transcription: str) -> str:
@@ -41,29 +42,32 @@ def split_audio(record: dict, input_path: Union[str, Path]):
         input_path (str or Path):
             The path to the directory where the raw dataset is stored.
     '''
-    # Ensure that `input_path` is a Path object
-    input_path = Path(input_path)
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
 
-    # Build the audio file path
-    year = record['utterance_id'].split('_')[1][:4]
-    filename = '_'.join(record['utterance_id'].split('_')[1:3]) + '.wav'
-    audio_path = input_path / 'audio' / year / filename
+        # Ensure that `input_path` is a Path object
+        input_path = Path(input_path)
 
-    # Get the start and end times in milliseconds
-    start_time = record['start_time'] * 1000
-    end_time = record['end_time'] * 1000
+        # Build the audio file path
+        year = record['utterance_id'].split('_')[1][:4]
+        filename = '_'.join(record['utterance_id'].split('_')[1:3]) + '.wav'
+        audio_path = input_path / 'audio' / year / filename
 
-    # Load and split the audio
-    audio = AudioSegment.from_wav(str(audio_path))[start_time:end_time]
+        # Get the start and end times in milliseconds
+        start_time = record['start_time'] * 1000
+        end_time = record['end_time'] * 1000
 
-    # Store the audio
-    new_filename = record['utterance_id'] + '.wav'
-    new_audio_path = input_path / 'processed_audio' / new_filename
-    out_ = audio.export(str(new_audio_path.resolve()), format='wav')
-    out_.close()
+        # Load and split the audio
+        audio = AudioSegment.from_wav(str(audio_path))[start_time:end_time]
 
-    # Close audio
-    del audio
+        # Store the audio
+        new_filename = record['utterance_id'] + '.wav'
+        new_audio_path = input_path / 'processed_audio' / new_filename
+        out_ = audio.export(str(new_audio_path.resolve()), format='wav')
+        out_.close()
+
+        # Close audio
+        del audio
 
 
 def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech_raw',
