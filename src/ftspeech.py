@@ -63,7 +63,7 @@ def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech_raw',
 
     # Load file with transcriptions
     dfs = {split: pd.read_csv(path, sep='\t')
-                    .rename(dict(transcript='sentence'))
+                    .rename(dict(transcription='sentence'))
            for split, path in paths.items()}
 
     # Preprocess the transcriptions
