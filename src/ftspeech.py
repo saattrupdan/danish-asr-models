@@ -1,9 +1,5 @@
 '''Class used to load in the FTSpeech dataset'''
 
-# Ignore warnings
-import warnings
-warnings.simplefilter('ignore')
-
 from datasets import DatasetDict, Dataset, Audio
 import pandas as pd
 from pathlib import Path
