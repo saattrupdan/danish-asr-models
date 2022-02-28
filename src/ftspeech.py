@@ -63,12 +63,11 @@ def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech_raw',
 
     # Load file with transcriptions
     dfs = {split: pd.read_csv(path, sep='\t')
-                    .rename(dict(transcription='sentence'))
            for split, path in paths.items()}
 
     # Preprocess the transcriptions
     for split, df in dfs.items():
-        df.sentence = df.sentence.map(preprocess_transcription)
+        df['sentence'] = df.transcript.map(preprocess_transcription)
         dfs[split] = df
 
     # Add a `speaker_id` column to the dataframes
@@ -108,8 +107,9 @@ def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech_raw',
         dfs[split] = df
 
     # Remove unused columns
+    cols_to_drop = ['utterance_id', 'start_time', 'end_time', 'transcript']
     for split, df in dfs.items():
-        df = df.drop(columns=['utterance_id', 'start_time', 'end_time'])
+        df = df.drop(columns=cols_to_drop)
         dfs[split] = df
 
     # Convert the dataframe to a HuggingFace Dataset
