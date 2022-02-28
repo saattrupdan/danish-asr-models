@@ -72,7 +72,8 @@ def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech_raw',
 
     # Add a `speaker_id` column to the dataframes
     for split, df in dfs.items():
-        df['speaker_id'] = df.utterance_id.split('_')[0]
+        df['speaker_id'] = [row.utterance_id.split('_')[0]
+                            for _, row in df.iterrows()]
         dfs[split] = df
 
     # Split the audio files
