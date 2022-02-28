@@ -128,7 +128,7 @@ def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech_raw',
     dataset = DatasetDict(datasets)
 
     # Cast `audio` as the audio path column
-    dataset = dataset.cast('audio', Audio(sampling_rate=16_000))
+    dataset = dataset.cast_column('audio', Audio(sampling_rate=16_000))
 
     # Store the dataset
     dataset.save_to_disk(str(output_path))
