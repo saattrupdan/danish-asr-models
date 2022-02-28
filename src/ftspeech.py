@@ -123,10 +123,10 @@ def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech_raw',
 
     # Split the audio files
     for split, df in tqdm(list(dfs.items()), desc='Splitting audio'):
-        records = df.to_dict('records')
+        pbar = tqdm(df.to_dict('records'), desc=split, leave=False)
         split_fn = delayed(split_audio)
         with Parallel(n_jobs=mp.cpu_count()) as parallel:
-            parallel(split_fn(record, input_path) for record in records)
+            parallel(split_fn(record, input_path) for record in pbar)
 
     # Add an `audio` column to the dataframes, containing the paths to the
     # audio files
