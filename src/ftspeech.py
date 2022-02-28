@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Union
 from pydub import AudioSegment
 from tqdm.auto import tqdm
+from joblib import delayed, Parallel
+import multiprocessing as mp
 
 
 def preprocess_transcription(transcription: str) -> str:
@@ -27,6 +29,41 @@ def preprocess_transcription(transcription: str) -> str:
 
     # Return the preprocessed transcription
     return transcription
+
+
+def split_audio(record: dict, input_path: Union[str, Path]):
+    '''Loads a full audio clip and splits it according to the record.
+
+    Args:
+        record (dict):
+            The record containing the audio data. Needs to have columns
+            `utterance_id`, `start_time` and `end_time`.
+        input_path (str or Path):
+            The path to the directory where the raw dataset is stored.
+    '''
+    # Ensure that `input_path` is a Path object
+    input_path = Path(input_path)
+
+    # Build the audio file path
+    year = record['utterance_id'].split('_')[1][:4]
+    filename = '_'.join(record['utterance_id'].split('_')[1:3]) + '.wav'
+    audio_path = input_path / 'audio' / year / filename
+
+    # Get the start and end times in milliseconds
+    start_time = record['start_time'] * 1000
+    end_time = record['end_time'] * 1000
+
+    # Load and split the audio
+    audio = AudioSegment.from_wav(str(audio_path))[start_time:end_time]
+
+    # Store the audio
+    new_filename = record['utterance_id'] + '.wav'
+    new_audio_path = input_path / 'processed_audio' / new_filename
+    out_ = audio.export(str(new_audio_path.resolve()), format='wav')
+    out_.close()
+
+    # Close audio
+    del audio
 
 
 def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech_raw',
@@ -82,28 +119,10 @@ def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech_raw',
 
     # Split the audio files
     for split, df in tqdm(list(dfs.items()), desc='Splitting audio'):
-        for _, row in tqdm(list(df.iterrows()), leave=False, desc=split):
-
-            # Build the audio file path
-            year = row.utterance_id.split('_')[1][:4]
-            filename = '_'.join(row.utterance_id.split('_')[1:3]) + '.wav'
-            audio_path = input_path / 'audio' / year / filename
-
-            # Get the start and end times in milliseconds
-            start_time = row.start_time * 1000
-            end_time = row.end_time * 1000
-
-            # Load and split the audio
-            audio = AudioSegment.from_wav(str(audio_path))[start_time:end_time]
-
-            # Store the audio
-            new_filename = row.utterance_id + '.wav'
-            new_audio_path = input_path / 'processed_audio' / new_filename
-            out_ = audio.export(str(new_audio_path.resolve()), format='wav')
-            out_.close()
-
-            # Close audio
-            del audio
+        records = df.to_dict('records')
+        split_fn = delayed(split_audio)
+        with Parallel(n_jobs=mp.cpu_count()) as parallel:
+            parallel(split_fn(record, input_path) for record in records)
 
     # Add an `audio` column to the dataframes, containing the paths to the
     # audio files
