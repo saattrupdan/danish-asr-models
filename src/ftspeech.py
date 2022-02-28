@@ -62,7 +62,7 @@ def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech_raw',
     }
 
     # Load file with transcriptions
-    dfs = {split: pd.read_csv(path, sep='\t')
+    dfs = {split: pd.read_csv(path, sep='\t').iloc[:10]
            for split, path in paths.items()}
 
     # Preprocess the transcriptions
@@ -82,8 +82,8 @@ def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech_raw',
         processed_audio_path.mkdir()
 
     # Split the audio files
-    for split, df in tqdm(list(dfs.items()[:1]), desc='Splitting audio'):
-        for _, row in tqdm(list(df.iterrows()[:10]), leave=False, desc=split):
+    for split, df in tqdm(list(dfs.items()), desc='Splitting audio'):
+        for _, row in tqdm(list(df.iterrows()), leave=False, desc=split):
 
             # Build the audio file path
             year = row.utterance_id.split('_')[1][:4]
