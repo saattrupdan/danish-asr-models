@@ -87,7 +87,7 @@ def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech_raw',
 
             # Build the audio file path
             year = row.utterance_id.split('_')[1][:4]
-            filename = row.utterance_id.split('_')[1:3] + '.wav'
+            filename = '_'.join(row.utterance_id.split('_')[1:3]) + '.wav'
             audio_path = input_path / 'audio' / year / filename
 
             # Get the start and end times in milliseconds
