@@ -76,6 +76,11 @@ def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech_raw',
                             for _, row in df.iterrows()]
         dfs[split] = df
 
+    # Ensure that `processed_audio` exists
+    processed_audio_path = input_path / 'processed_audio'
+    if not processed_audio_path.exists():
+        processed_audio_path.mkdir()
+
     # Split the audio files
     for split, df in tqdm(list(dfs.items()), desc='Splitting audio'):
         for _, row in tqdm(list(df.iterrows()), leave=False, desc=split):
