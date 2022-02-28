@@ -100,7 +100,11 @@ def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech_raw',
             # Store the audio
             new_filename = row.utterance_id + '.wav'
             new_audio_path = input_path / 'processed_audio' / new_filename
-            audio.export(str(new_audio_path.resolve()), format='wav')
+            out_ = audio.export(str(new_audio_path.resolve()), format='wav')
+            out_.close()
+
+            # Close audio
+            del audio
 
     # Add an `audio` column to the dataframes, containing the paths to the
     # audio files
