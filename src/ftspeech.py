@@ -104,7 +104,6 @@ def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech_raw',
             out_.close()
 
             # Close audio
-            audio.close()
             del audio
 
     # Add an `audio` column to the dataframes, containing the paths to the
