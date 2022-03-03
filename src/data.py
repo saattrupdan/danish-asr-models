@@ -188,8 +188,8 @@ class AudioDataset:
         # Replace spaces with a pipe, to emphasise the word boundaries
         examples['sentence'] = re.sub(r' +', '|', examples['sentence'])
 
-        # Make the transcription lowercase
-        examples['sentence'] = examples['sentence'].lower()
+        # Make the transcription lowercase and strip whitespace
+        examples['sentence'] = examples['sentence'].lower().strip()
 
         return examples
 
