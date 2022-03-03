@@ -191,6 +191,9 @@ class AudioDataset:
         # Make the transcription lowercase and strip whitespace
         examples['sentence'] = examples['sentence'].lower().strip()
 
+        # Convert 'aa' to 'å'
+        examples['sentence'] = re.sub('aa', 'å', examples['sentence'])
+
         return examples
 
     def _preprocess(self, examples: dict) -> dict:
