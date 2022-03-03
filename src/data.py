@@ -53,9 +53,9 @@ class AudioDataset:
         '''Preprocess the dataset'''
 
         # Clean the transcriptions
-        self.train = self.train.map(self._clean_transcription)
-        self.val = self.val.map(self._clean_transcription)
-        self.test = self.test.map(self._clean_transcription)
+        self.train = self.train.map(self._clean_examples)
+        self.val = self.val.map(self._clean_examples)
+        self.test = self.test.map(self._clean_examples)
 
         # Resample the audio
         audio = Audio(sampling_rate=self.sampling_rate)
@@ -167,7 +167,7 @@ class AudioDataset:
         return train, val, test
 
     @staticmethod
-    def _clean_transcription(examples: dict) -> dict:
+    def _clean_examples(examples: dict) -> dict:
         '''Cleans the transcription of an example.
 
         Args:
@@ -178,21 +178,8 @@ class AudioDataset:
             dict:
                 A dictionary containing the cleaned transcription.
         '''
-        # NFKC normalize the transcriptions
-        examples['sentence'] = normalize('NFKC', examples['sentence'])
-
-        # Remove punctuation
-        regex = r'[\[\]\{\}\(\)\,\?\.\!\-\—\–\;\:\"\“\'\%\”\�]'
-        examples['sentence'] = re.sub(regex, '', examples['sentence'])
-
-        # Replace spaces with a pipe, to emphasise the word boundaries
-        examples['sentence'] = re.sub(r' +', '|', examples['sentence'])
-
-        # Make the transcription lowercase and strip whitespace
-        examples['sentence'] = examples['sentence'].lower().strip()
-
-        # Convert 'aa' to 'å'
-        examples['sentence'] = re.sub('aa', 'å', examples['sentence'])
+        # Clean the transcription
+        examples['sentence'] = clean_transcription(examples['sentence'])
 
         return examples
 
@@ -252,3 +239,33 @@ class AudioDataset:
         # Dump the vocabulary to a json file
         with Path('vocab.json').open('w') as f:
             json.dump(vocab, f)
+
+
+def clean_transcription(doc: str) -> str:
+    '''Cleans the transcription of a document.
+
+    Args:
+        doc (str):
+            A document to be cleaned.
+
+    Returns:
+        str:
+            The cleaned document.
+    '''
+    # NFKC normalize the transcriptions
+    doc = normalize('NFKC', doc)
+
+    # Remove punctuation
+    regex = r'[\[\]\{\}\(\)\,\?\.\!\-\—\–\;\:\"\“\'\%\”\�]'
+    doc = re.sub(regex, '', doc)
+
+    # Replace spaces with a pipe, to emphasise the word boundaries
+    doc = re.sub(r' +', '|', doc)
+
+    # Make the transcription lowercase and strip whitespace
+    doc = doc.lower().strip()
+
+    # Convert 'aa' to 'å'
+    doc = re.sub('aa', 'å', doc)
+
+    return doc

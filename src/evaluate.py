@@ -7,12 +7,11 @@ from transformers import (Wav2Vec2Processor,
 import transformers.utils.logging as tf_logging
 from datasets import load_dataset as ds_load_dataset
 from datasets import Audio, Dataset
-from unicodedata import normalize
 from functools import partial
-import re
 import click
 from data_collator import DataCollatorCTCWithPadding
 from compute_metrics import compute_metrics
+from data import clean_transcription
 
 
 @click.command()
@@ -59,7 +58,7 @@ def evaluate(model_id: str,
         dataset = Dataset.from_file(f'{dataset_id}/dataset.arrow')
 
      # Clean the transcriptions
-    dataset = dataset.map(clean_transcription)
+    dataset = dataset.map(clean_examples)
 
     # Resample the audio
     audio = Audio(sampling_rate=sampling_rate)
@@ -109,7 +108,7 @@ def evaluate(model_id: str,
     print(f'{model_id} achieved a WER of {wer:.2f}.\n')
 
 
-def clean_transcription(examples: dict) -> dict:
+def clean_examples(examples: dict) -> dict:
     '''Cleans the transcription of an example.
 
     Args:
@@ -120,18 +119,8 @@ def clean_transcription(examples: dict) -> dict:
         dict:
             A dictionary containing the cleaned transcription.
     '''
-    # NFKC normalize the transcriptions
-    examples['sentence'] = normalize('NFKC', examples['sentence'])
-
-    # Remove punctuation
-    regex = r'[\[\]\{\}\(\)\,\?\.\!\-\—\–\;\:\"\“\%\”\�]'
-    examples['sentence'] = re.sub(regex, '', examples['sentence'])
-
-    # Replace spaces with a pipe, to emphasise the word boundaries
-    examples['sentence'] = re.sub(r' +', '|', examples['sentence'])
-
-    # Make the transcription lowercase
-    examples['sentence'] = examples['sentence'].lower()
+    # Clean the transcription
+    examples['sentence'] = clean_transcription(examples['sentence'])
 
     return examples
 
