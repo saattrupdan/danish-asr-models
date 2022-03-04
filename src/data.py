@@ -129,7 +129,7 @@ class AudioDataset:
         '''
         try:
             return ds_load_dataset(path=dataset_id,
-                                   name=dataset_subset,
+                                   name=name,
                                    split=split,
                                    use_auth_token=use_auth_token)
         except ValueError:
