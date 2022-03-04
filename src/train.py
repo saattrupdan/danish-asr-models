@@ -168,6 +168,8 @@ if __name__ == '__main__':
         test_name='test_balanced',
         pretrained_model_id='facebook/wav2vec2-xls-r-300m',
         finetuned_model_id='saattrupdan/wav2vec2-xls-r-300m-ftspeech',
+        batch_size=1,
+        gradient_accumulation_steps=32,
     )
 
     train(ftspeech_config)
