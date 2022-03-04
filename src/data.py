@@ -105,6 +105,36 @@ class AudioDataset:
 
         return self
 
+    @staticmethod
+    def _load_dataset_split(dataset_id: str,
+                            name: Optional[str] = None,
+                            split: str = 'train',
+                            use_auth_token: bool = True) -> Dataset:
+        '''Load a dataset split.
+
+        Args:
+            dataset_id (str):
+                The HF dataset id.
+            name (str or None, optional):
+                The name of the dataset split. If None then the dataset split
+                is created from the train split. Defaults to None.
+            split (str, optional):
+                The HF dataset split. Defaults to 'train'.
+            use_auth_token (bool, optional):
+                Whether to use the auth token. Defaults to True.
+
+        Returns:
+            Dataset:
+                The loaded dataset split.
+        '''
+        try:
+            return ds_load_dataset(path=dataset_id,
+                                   name=dataset_subset,
+                                   split=split,
+                                   use_auth_token=use_auth_token)
+        except ValueError:
+            return Dataset.load_from_disk(dataset_path=dataset_id)
+
     def _load_dataset(self) -> Tuple[Dataset, Dataset, Dataset]:
         '''Loads a dataset.
 
@@ -114,25 +144,22 @@ class AudioDataset:
                 dataset.
         '''
         # Load train dataset
-        train = ds_load_dataset(path=self.dataset_id,
-                                name=self.dataset_subset,
-                                split=self.train_name,
-                                use_auth_token=True)
+        train = self._load_dataset_split(dataset_id=self.dataset_id,
+                                         name=self.dataset_subset,
+                                         split=self.train_name)
 
         # Load validation and test datasets. If both `validation_name` and
         # `test_name` are not None then these are simply loaded. If only
         # `test_name` is not None then a validation set is created from the
         # train dataset.
         if self.test_name is not None:
-            test = ds_load_dataset(path=self.dataset_id,
-                                   name=self.dataset_subset,
-                                   split=self.test_name,
-                                   use_auth_token=True)
+            test = self._load_dataset_split(dataset_id=self.dataset_id,
+                                            name=self.dataset_subset,
+                                            split=self.test_name)
             if self.validation_name is not None:
-                val = ds_load_dataset(path=self.dataset_id,
-                                      name=self.dataset_subset,
-                                      split=self.validation_name,
-                                      use_auth_token=True)
+                val = self._load_dataset_split(dataset_id=self.dataset_id,
+                                               name=self.dataset_subset,
+                                               split=self.validation_name)
             else:
                 split_dict = train.train_test_split(test_size=0.1, seed=4242)
                 train = split_dict['train']
@@ -142,10 +169,9 @@ class AudioDataset:
         # as a test set and a new validation set is created from the train
         # dataset.
         elif self.validation_name is not None:
-            test = ds_load_dataset(path=self.dataset_id,
-                                   name=self.dataset_subset,
-                                   split=self.validation_name,
-                                   use_auth_token=True)
+            test = self._load_dataset_split(dataset_id=self.dataset_id,
+                                            name=self.dataset_subset,
+                                            split=self.validation_name)
             split_dict = train.train_test_split(test_size=0.1, seed=4242)
             train = split_dict['train']
             val = split_dict['test']
