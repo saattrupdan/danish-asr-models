@@ -3,7 +3,10 @@
 from transformers import (Wav2Vec2CTCTokenizer,
                           Wav2Vec2FeatureExtractor,
                           Wav2Vec2Processor)
-from datasets import load_dataset as ds_load_dataset, Dataset, Audio
+from datasets import (load_dataset as ds_load_dataset,
+                      Dataset,
+                      DatasetDict,
+                      Audio)
 from unicodedata import normalize
 from typing import Optional, Tuple
 from pathlib import Path
@@ -133,7 +136,7 @@ class AudioDataset:
                                    split=split,
                                    use_auth_token=use_auth_token)
         except ValueError:
-            return Dataset.load_from_disk(dataset_path=dataset_id)[split]
+            return DatasetDict.load_from_disk(dataset_path=dataset_id)[split]
 
     def _load_dataset(self) -> Tuple[Dataset, Dataset, Dataset]:
         '''Loads a dataset.
