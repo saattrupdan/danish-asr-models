@@ -332,6 +332,10 @@ def clean_transcription(doc: str) -> str:
     for key, value in conversion_dict.items():
         doc = doc.replace(key, value)
 
+    # Remove empty whitespace
+    doc = re.sub(u'\u0301', ' ', doc)
+    doc = re.sub(u'\u200b', ' ', doc)
+
     # Replace spaces with a pipe, to emphasise the word boundaries
     doc = re.sub(r' +', '|', doc)
 
