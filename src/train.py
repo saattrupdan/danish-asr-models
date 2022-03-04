@@ -141,7 +141,6 @@ if __name__ == '__main__':
     xlsr_300m_config = Config(
         pretrained_model_id='facebook/wav2vec2-xls-r-300m',
         finetuned_model_id='saattrupdan/wav2vec2-xls-r-300m-cv8-da',
-        resume_from_checkpoint=True
     )
 
     alvenir_config = Config(
@@ -162,4 +161,13 @@ if __name__ == '__main__':
         final_dropout=0.3
     )
 
-    train(voxpopuli_config)
+    ftspeech_config = Config(
+        dataset_id='/media/secure/dan/ftspeech/ftspeech',
+        dataset_subset=None,
+        validation_name='dev_balanced',
+        test_name='test_balanced',
+        pretrained_model_id='facebook/wav2vec2-xls-r-300m',
+        finetuned_model_id='saattrupdan/wav2vec2-xls-r-300m-ftspeech',
+    )
+
+    train(ftspeech_config)
