@@ -285,7 +285,7 @@ def clean_transcription(doc: str) -> str:
     doc = normalize('NFKC', doc)
 
     # Remove punctuation
-    regex = r'[\[\]\{\}\(\)\,\?\.\!\-\—\–\;\:\"\“\'\%\”\�]'
+    regex = r'[\[\]\{\}\(\)\,\?\.\!\-\—\–\;\:\"\“\'\’\%\”\�\•\n\r\⁄\’]'
     doc = re.sub(regex, '', doc)
 
     # Replace spaces with a pipe, to emphasise the word boundaries
@@ -294,7 +294,48 @@ def clean_transcription(doc: str) -> str:
     # Make the transcription lowercase and strip whitespace
     doc = doc.lower().strip()
 
-    # Convert 'aa' to 'å'
-    doc = re.sub('aa', 'å', doc)
+    # Remove non-vocabulary characters
+    conversion_dict = {
+        'aa': 'å',
+        'ğ': 'g',
+        'ñ': 'n',
+        'ń': 'n',
+        'è': 'e',
+        'μ': 'm',
+        '§': 'paragraf|',
+        '‰': 'promille|',
+        'ú': 'u',
+        'ş': 's',
+        'ê': 'e',
+        'ã': 'a',
+        'ü': 'ue',
+        'ë': 'e',
+        'ć': 'c',
+        'ä': 'æ',
+        'í': 'i',
+        'š': 's',
+        'î': 'i',
+        'ě': 'e',
+        'ð': 'd',
+        'á': 'a',
+        'ó': 'o',
+        'þ': 'th',
+        'ı': 'i',
+        'ö': 'oe',
+        'ç': 'c',
+        'ș': 's',
+        '0': 'nul',
+        '1': 'et',
+        '2': 'to',
+        '3': 'tre',
+        '4': 'fire',
+        '5': 'fem',
+        '6': 'seks',
+        '7': 'syv',
+        '8': 'otte',
+        '9': 'ni'
+    }
+    for key, value in conversion_dict.items():
+        doc = doc.replace(key, value)
 
     return doc
