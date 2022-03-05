@@ -80,6 +80,7 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
         output_dir=config.finetuned_model_id.split('/')[-1],
         hub_model_id=config.finetuned_model_id,
         per_device_train_batch_size=config.batch_size,
+        per_device_eval_batch_size=config.batch_size,
         gradient_accumulation_steps=config.gradient_accumulation_steps,
         learning_rate=config.learning_rate,
         warmup_steps=config.warmup_steps,
