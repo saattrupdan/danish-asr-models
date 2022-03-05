@@ -88,8 +88,8 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
         fp16=config.fp16,
         push_to_hub=config.push_to_hub,
         evaluation_strategy='steps',
-        eval_steps=300,
-        save_steps=300,
+        eval_steps=500,
+        save_steps=500,
         logging_steps=100,
         group_by_length=True,
         gradient_checkpointing=True,
@@ -169,8 +169,11 @@ if __name__ == '__main__':
         test_name='test_balanced',
         pretrained_model_id='facebook/wav2vec2-xls-r-300m',
         finetuned_model_id='saattrupdan/wav2vec2-xls-r-300m-ftspeech',
-        batch_size=1,
-        gradient_accumulation_steps=32,
+        batch_size=8,
+        gradient_accumulation_steps=4,
+        learning_rate=1e-4,
+        warmup_steps=2000,
+        freeze_feature_encoder=True
     )
 
     train(ftspeech_config)
