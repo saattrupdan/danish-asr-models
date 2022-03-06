@@ -6,12 +6,17 @@ from transformers import (Wav2Vec2CTCTokenizer,
 from datasets import (load_dataset as ds_load_dataset,
                       Dataset,
                       DatasetDict,
-                      Audio)
+                      Audio,
+                      set_caching_enabled)
 from unicodedata import normalize
 from typing import Optional, Tuple
 from pathlib import Path
 import json
 import re
+
+
+# Disable dataset caching
+set_caching_enabled(False)
 
 
 class AudioDataset:
