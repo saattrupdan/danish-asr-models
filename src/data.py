@@ -151,6 +151,9 @@ class AudioDataset:
                                          name=self.dataset_subset,
                                          split=self.train_name)
 
+        # TEMP
+        train = train.select(range(100))
+
         # Load validation and test datasets. If both `validation_name` and
         # `test_name` are not None then these are simply loaded. If only
         # `test_name` is not None then a validation set is created from the
