@@ -88,9 +88,9 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
         fp16=config.fp16,
         push_to_hub=config.push_to_hub,
         evaluation_strategy='steps',
-        eval_steps=50,
-        save_steps=50,
-        logging_steps=10,
+        eval_steps=500,
+        save_steps=500,
+        logging_steps=100,
         group_by_length=True,
         gradient_checkpointing=True,
         save_total_limit=2,
@@ -173,7 +173,6 @@ if __name__ == '__main__':
         gradient_accumulation_steps=32,
         learning_rate=1e-4,
         warmup_steps=2000,
-        epochs=1
     )
 
     train(ftspeech_config)
