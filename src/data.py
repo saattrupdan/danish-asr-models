@@ -194,9 +194,9 @@ class AudioDataset:
             test = split_dict['test']
 
         # TEMP
-        train = train.select(range(10))
-        val = val.select(range(10))
-        test = test.select(range(10))
+        train = train.select(range(100))
+        val = val.select(range(100))
+        test = test.select(range(100))
 
         return train, val, test
 
