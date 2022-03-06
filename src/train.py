@@ -172,8 +172,7 @@ if __name__ == '__main__':
         batch_size=1,
         gradient_accumulation_steps=32,
         learning_rate=1e-4,
-        warmup_steps=2000,
-        freeze_feature_encoder=True
+        warmup_steps=2000
     )
 
     train(ftspeech_config)
