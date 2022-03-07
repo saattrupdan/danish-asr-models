@@ -76,9 +76,9 @@ class AudioDataset:
         self.initialise_preprocessor()
 
         # Preprocess the datasets
-        self.train.map(self._preprocess)
-        self.val.map(self._preprocess)
-        self.test.map(self._preprocess)
+        self.train.map(self._preprocess, batched=True)
+        self.val.map(self._preprocess, batched=True)
+        self.test.map(self._preprocess, batched=True)
 
         return self
 
