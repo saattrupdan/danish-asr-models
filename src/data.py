@@ -227,7 +227,6 @@ class AudioDataset:
         # Get the dictionary from the examples containing the audio data
         audio = examples['audio']
 
-        print(audio.keys())
         print(audio)
 
         # Preprocess the audio
