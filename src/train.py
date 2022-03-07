@@ -10,7 +10,6 @@ from data_collator import DataCollatorCTCWithPadding
 from compute_metrics import compute_metrics
 from functools import partial
 from config import Config
-from datasets import IterableDataset
 
 
 def train(config: Optional[Union[dict, Config]] = None, **kwargs):
@@ -98,8 +97,7 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
         load_best_model_at_end=config.early_stopping,
         metric_for_best_model='wer',
         greater_is_better=False,
-        seed=4242,
-        max_steps=(config.epochs * len(dataset.train) // config.batch_size)
+        seed=4242
     )
 
     # Create early stopping callback
@@ -117,10 +115,10 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
         data_collator=data_collator,
         args=training_args,
         compute_metrics=partial(compute_metrics, processor=dataset.processor),
-        train_dataset=IterableDataset(dataset.train),
+        train_dataset=dataset.train,
         eval_dataset=dataset.val,
         tokenizer=dataset.tokenizer,
-        callbacks=callbacks,
+        callbacks=callbacks
     )
 
     # Save the preprocessor

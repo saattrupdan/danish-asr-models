@@ -12,7 +12,6 @@ from typing import Optional, Tuple
 from pathlib import Path
 import json
 import re
-import numpy as np
 
 
 class AudioDataset:
