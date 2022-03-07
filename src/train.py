@@ -48,8 +48,6 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
     # Preprocess the dataset
     dataset.preprocess()
 
-    breakpoint()
-
     # Initialise data collator
     data_collator = DataCollatorCTCWithPadding(processor=dataset.processor,
                                                padding='longest')
