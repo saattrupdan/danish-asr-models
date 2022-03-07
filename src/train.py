@@ -98,7 +98,8 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
         load_best_model_at_end=config.early_stopping,
         metric_for_best_model='wer',
         greater_is_better=False,
-        seed=4242
+        seed=4242,
+        max_steps=(config.epochs * len(dataset.train) // config.batch_size)
     )
 
     # Create early stopping callback
@@ -119,7 +120,7 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
         train_dataset=IterableDataset(dataset.train),
         eval_dataset=dataset.val,
         tokenizer=dataset.tokenizer,
-        callbacks=callbacks
+        callbacks=callbacks,
     )
 
     # Save the preprocessor
