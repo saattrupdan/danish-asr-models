@@ -10,6 +10,7 @@ from data_collator import DataCollatorCTCWithPadding
 from compute_metrics import compute_metrics
 from functools import partial
 from config import Config
+from datasets import IterableDataset
 
 
 def train(config: Optional[Union[dict, Config]] = None, **kwargs):
@@ -115,7 +116,7 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
         data_collator=data_collator,
         args=training_args,
         compute_metrics=partial(compute_metrics, processor=dataset.processor),
-        train_dataset=dataset.train,
+        train_dataset=IterableDataset(dataset.train),
         eval_dataset=dataset.val,
         tokenizer=dataset.tokenizer,
         callbacks=callbacks
