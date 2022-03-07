@@ -98,8 +98,7 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
         load_best_model_at_end=config.early_stopping,
         metric_for_best_model='wer',
         greater_is_better=False,
-        seed=4242,
-        remove_unused_columns=False,
+        seed=4242
     )
 
     # Create early stopping callback
@@ -110,6 +109,8 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
         callbacks = [early_stopping_callback]
     else:
         callbacks = []
+
+    training_args.remove_unused_columns=False
 
     # Initialise the trainer
     trainer = Trainer(
