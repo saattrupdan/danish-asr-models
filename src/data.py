@@ -259,10 +259,11 @@ class AudioDataset:
         sampling_rate = examples['audio'][0]['sampling_rate']
 
         # Preprocess the audio
-        examples['input_values'] = (
-            self.processor(audio_arrays, sampling_rate=sampling_rate)
-                .input_values
-        )
+        examples['input_values'] = [
+            self.processor(audio_array, sampling_rate=sampling_rate)
+                .input_values[0]
+            for audio_array in audio_arrays
+        ]
 
         # Return the preprocessed examples
         return examples
