@@ -125,8 +125,6 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
     # Save the preprocessor
     dataset.processor.save_pretrained(config.finetuned_model_id.split('/')[-1])
 
-    print([i for i in range(100) if 'audio' not in dataset.train[i]])
-
     breakpoint()
 
     # Train the model
