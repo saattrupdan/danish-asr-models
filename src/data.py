@@ -56,9 +56,12 @@ class AudioDataset:
         '''Preprocess the dataset'''
 
         # Clean the transcriptions
-        self.train = self.train.map(self._clean_examples)
-        self.val = self.val.map(self._clean_examples)
-        self.test = self.test.map(self._clean_examples)
+        self.train = self.train.map(self._clean_examples,
+                                    load_from_cache_file=False)
+        self.val = self.val.map(self._clean_examples,
+                                load_from_cache_file=False)
+        self.test = self.test.map(self._clean_examples,
+                                  load_from_cache_file=False)
 
         # Resample the audio
         audio = Audio(sampling_rate=self.sampling_rate)
