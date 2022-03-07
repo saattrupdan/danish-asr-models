@@ -113,7 +113,7 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
     # Initialise the trainer
     trainer = Trainer(
         model=model,
-        data_collator=data_collator,
+        #data_collator=data_collator,
         args=training_args,
         compute_metrics=partial(compute_metrics, processor=dataset.processor),
         train_dataset=dataset.train,
