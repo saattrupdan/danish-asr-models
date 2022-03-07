@@ -199,8 +199,7 @@ class AudioDataset:
 
         return train, val, test
 
-    @staticmethod
-    def _clean_examples(examples: dict) -> dict:
+    def _clean_examples(self, examples: dict) -> dict:
         '''Cleans the transcription of an example.
 
         Args:
@@ -213,6 +212,10 @@ class AudioDataset:
         '''
         # Clean the transcription
         examples['sentence'] = clean_transcription(examples['sentence'])
+
+        # Preprocess labels
+        with self.processor.as_target_processor():
+            examples["labels"] = self.processor(examples["sentence"]).input_ids
 
         return examples
 
@@ -238,10 +241,6 @@ class AudioDataset:
             self.processor(audio_arrays, sampling_rate=sampling_rate)
                 .input_values
         )
-
-        # Preprocess labels
-        with self.processor.as_target_processor():
-            examples["labels"] = self.processor(examples["sentence"]).input_ids
 
         # Return the preprocessed examples
         return examples
