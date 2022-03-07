@@ -157,7 +157,7 @@ class AudioDataset:
                                    split=split,
                                    use_auth_token=use_auth_token)
         except ValueError:
-            return DatasetDict.load_from_disk(dataset_id)[split].select(range(1000))
+            return DatasetDict.load_from_disk(dataset_id)[split].select(range(100))
 
     def _load_dataset(self) -> Tuple[Dataset, Dataset, Dataset]:
         '''Loads a dataset.
