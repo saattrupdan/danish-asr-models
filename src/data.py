@@ -6,8 +6,7 @@ from transformers import (Wav2Vec2CTCTokenizer,
 from datasets import (load_dataset as ds_load_dataset,
                       Dataset,
                       DatasetDict,
-                      Audio,
-                      set_caching_enabled)
+                      Audio)
 from unicodedata import normalize
 from typing import Optional, Tuple
 from pathlib import Path
@@ -53,19 +52,13 @@ class AudioDataset:
         # Load the dataset
         self.train, self.val, self.test = self._load_dataset()
 
-        # Disable dataset caching
-        set_caching_enabled(False)
-
     def preprocess(self):
         '''Preprocess the dataset'''
 
         # Clean the transcriptions
-        self.train = self.train.map(self._clean_examples,
-                                    load_from_cache_file=False)
-        self.val = self.val.map(self._clean_examples,
-                                load_from_cache_file=False)
-        self.test = self.test.map(self._clean_examples,
-                                  load_from_cache_file=False)
+        self.train = self.train.map(self._clean_examples)
+        self.val = self.val.map(self._clean_examples)
+        self.test = self.test.map(self._clean_examples)
 
         # Resample the audio
         audio = Audio(sampling_rate=self.sampling_rate)
@@ -80,12 +73,9 @@ class AudioDataset:
         self.initialise_preprocessor()
 
         # Preprocess the datasets
-        self.train = self.train.map(self._preprocess,
-                                    load_from_cache_file=False)
-        self.val = self.val.map(self._preprocess,
-                                load_from_cache_file=False)
-        self.test = self.test.map(self._preprocess,
-                                  load_from_cache_file=False)
+        self.train.set_transform(self._preprocess)
+        self.val.set_transform(self._preprocess)
+        self.test.set_transform(self._preprocess)
 
         return self
 
