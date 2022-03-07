@@ -137,8 +137,7 @@ class AudioDataset:
                                    use_auth_token=use_auth_token,
                                    download_mode='force_redownload')
         except ValueError:
-            return DatasetDict.load_from_disk(dataset_id,
-                                              keep_in_memory=True)[split]
+            return DatasetDict.load_from_disk(dataset_id)[split]
 
     def _load_dataset(self) -> Tuple[Dataset, Dataset, Dataset]:
         '''Loads a dataset.
