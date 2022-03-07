@@ -171,7 +171,7 @@ if __name__ == '__main__':
         pretrained_model_id='facebook/wav2vec2-xls-r-300m',
         finetuned_model_id='saattrupdan/wav2vec2-xls-r-300m-ftspeech',
         batch_size=1,
-        gradient_accumulation_steps=1,
+        gradient_accumulation_steps=32,
         learning_rate=1e-4,
         warmup_steps=2000,
     )
