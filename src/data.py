@@ -264,8 +264,6 @@ class AudioDataset:
                 .input_values
         )
 
-        examples["input_length"] = len(examples["input_values"])
-
         # Return the preprocessed examples
         return examples
 
