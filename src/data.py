@@ -237,7 +237,9 @@ class AudioDataset:
         ], dim=0)
 
         # Add feature with the input length
-        examples['length'] = examples['input_values'].size(0)
+        examples['length'] = torch.tensor(
+            [examples['input_values'].shape[-1]] * len(audios)
+        )
 
         # Preprocess labels
         with self.processor.as_target_processor():
