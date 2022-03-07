@@ -48,8 +48,6 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
     # Preprocess the dataset
     dataset.preprocess()
 
-    breakpoint()
-
     # Initialise data collator
     data_collator = DataCollatorCTCWithPadding(processor=dataset.processor,
                                                padding='longest')
@@ -93,10 +91,10 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
         eval_steps=500,
         save_steps=500,
         logging_steps=100,
-        group_by_length=True,
+        #group_by_length=True,
+        #length_column_name='input_length',
         gradient_checkpointing=True,
         save_total_limit=2,
-        length_column_name='input_length',
         load_best_model_at_end=config.early_stopping,
         metric_for_best_model='wer',
         greater_is_better=False,
