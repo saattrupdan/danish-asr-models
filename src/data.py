@@ -234,10 +234,8 @@ class AudioDataset:
         # Preprocess the audio
         examples['input_values'] = (
             self.processor(audio_arrays, sampling_rate=sampling_rate)
-                .input_values[0]
+                .input_values
         )
-
-        examples['length'] = [len(vals) for vals in examples['input_values']]
 
         # Preprocess labels
         with self.processor.as_target_processor():
