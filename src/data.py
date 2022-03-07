@@ -230,9 +230,9 @@ class AudioDataset:
 
         # Preprocess the audio
         examples['input_values'] = torch.stack([
-            self.processor(audio['array'],
-                           sampling_rate=audio['sampling_rate'])
-                .input_values
+            torch.tensor(self.processor(audio['array'],
+                                        sampling_rate=audio['sampling_rate'])
+                             .input_values)
             for audio in audios
         ], dim=0)
 
