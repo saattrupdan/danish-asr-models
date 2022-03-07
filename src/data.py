@@ -227,8 +227,6 @@ class AudioDataset:
         # Get the dictionary from the examples containing the audio data
         audios = examples['audio']
 
-        print(examples['input_values'])
-
         # Preprocess the audio
         examples['input_values'] = [
             self.processor(audio['array'],
