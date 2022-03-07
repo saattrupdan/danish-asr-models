@@ -15,10 +15,6 @@ import json
 import re
 
 
-# Disable dataset caching
-set_caching_enabled(False)
-
-
 class AudioDataset:
     '''A dataset containing audio data.
 
@@ -57,13 +53,19 @@ class AudioDataset:
         # Load the dataset
         self.train, self.val, self.test = self._load_dataset()
 
+        # Disable dataset caching
+        set_caching_enabled(False)
+
     def preprocess(self):
         '''Preprocess the dataset'''
 
         # Clean the transcriptions
-        self.train = self.train.map(self._clean_examples)
-        self.val = self.val.map(self._clean_examples)
-        self.test = self.test.map(self._clean_examples)
+        self.train = self.train.map(self._clean_examples,
+                                    load_from_cache_file=False)
+        self.val = self.val.map(self._clean_examples,
+                                load_from_cache_file=False)
+        self.test = self.test.map(self._clean_examples,
+                                  load_from_cache_file=False)
 
         # Resample the audio
         audio = Audio(sampling_rate=self.sampling_rate)
@@ -78,9 +80,12 @@ class AudioDataset:
         self.initialise_preprocessor()
 
         # Preprocess the datasets
-        self.train = self.train.map(self._preprocess)
-        self.val = self.val.map(self._preprocess)
-        self.test = self.test.map(self._preprocess)
+        self.train = self.train.map(self._preprocess,
+                                    load_from_cache_file=False)
+        self.val = self.val.map(self._preprocess,
+                                load_from_cache_file=False)
+        self.test = self.test.map(self._preprocess,
+                                  load_from_cache_file=False)
 
         return self
 
@@ -139,9 +144,11 @@ class AudioDataset:
             return ds_load_dataset(path=dataset_id,
                                    name=name,
                                    split=split,
-                                   use_auth_token=use_auth_token)
+                                   use_auth_token=use_auth_token,
+                                   download_mode='force_redownload')
         except ValueError:
-            return DatasetDict.load_from_disk(dataset_id)[split]
+            return DatasetDict.load_from_disk(dataset_id,
+                                              keep_in_memory=True)[split]
 
     def _load_dataset(self) -> Tuple[Dataset, Dataset, Dataset]:
         '''Loads a dataset.
