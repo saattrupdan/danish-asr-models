@@ -253,16 +253,19 @@ class AudioDataset:
                 A dictionary containing the preprocessed examples.
         '''
         # Get the dictionary from the examples containing the audio data
-        audio_arrays = [audio['array'] for audio in examples['audio']]
+        audio = examples['audio']
 
-        # Get the sampling rate
-        sampling_rate = examples['audio'][0]['sampling_rate']
-
-        # Preprocess the audio
-        examples['input_values'] = (
-            self.processor(audio_arrays, sampling_rate=sampling_rate)
-                .input_values
+        # batched output is "un-batched"
+        examples["input_values"] = (
+            self.processor(audio["array"],
+                           sampling_rate=audio["sampling_rate"])
+                .input_values[0]
         )
+
+        examples["input_length"] = len(examples["input_values"])
+
+        with self.processor.as_target_processor():
+            examples["labels"] = self.processor(examples["sentence"]).input_ids
 
         # Return the preprocessed examples
         return examples
