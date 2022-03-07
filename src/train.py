@@ -98,7 +98,8 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
         load_best_model_at_end=config.early_stopping,
         metric_for_best_model='wer',
         greater_is_better=False,
-        seed=4242
+        seed=4242,
+        remove_unused_columns=False,
     )
 
     # Create early stopping callback
@@ -124,8 +125,6 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
 
     # Save the preprocessor
     dataset.processor.save_pretrained(config.finetuned_model_id.split('/')[-1])
-
-    breakpoint()
 
     # Train the model
     trainer.train(resume_from_checkpoint=config.resume_from_checkpoint)
