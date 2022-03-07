@@ -232,7 +232,7 @@ class AudioDataset:
         examples['input_values'] = [
             self.processor(audio['array'],
                            sampling_rate=audio['sampling_rate'])
-                .input_values
+                .input_values[0]
             for audio in audios
         ]
 
