@@ -228,6 +228,7 @@ class AudioDataset:
         audios = examples['audio']
 
         # Preprocess the audio
+        breakpoint()
         examples['input_values'] = [
             self.processor(audio['array'],
                            sampling_rate=audio['sampling_rate'])
