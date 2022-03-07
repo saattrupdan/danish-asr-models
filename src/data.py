@@ -235,6 +235,9 @@ class AudioDataset:
             for audio in audios
         ]
 
+        if len(examples['input_values']) == 1:
+            examples['input_values'] = examples['input_values'][0]
+
         # Preprocess labels
         with self.processor.as_target_processor():
             examples["labels"] = self.processor(examples["sentence"]).input_ids
