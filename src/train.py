@@ -91,8 +91,8 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
         eval_steps=500,
         save_steps=500,
         logging_steps=100,
-        #group_by_length=True,
-        #length_column_name='input_length',
+        group_by_length=True,
+        length_column_name='input_length',
         gradient_checkpointing=True,
         save_total_limit=2,
         load_best_model_at_end=config.early_stopping,
@@ -124,8 +124,6 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
 
     # Save the preprocessor
     dataset.processor.save_pretrained(config.finetuned_model_id.split('/')[-1])
-
-    breakpoint()
 
     # Train the model
     trainer.train(resume_from_checkpoint=config.resume_from_checkpoint)

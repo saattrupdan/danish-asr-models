@@ -155,10 +155,9 @@ class AudioDataset:
             return ds_load_dataset(path=dataset_id,
                                    name=name,
                                    split=split,
-                                   use_auth_token=use_auth_token,
-                                   download_mode='force_redownload')
+                                   use_auth_token=use_auth_token)
         except ValueError:
-            return DatasetDict.load_from_disk(dataset_id)[split]#.select(range(100))
+            return DatasetDict.load_from_disk(dataset_id)[split].select(range(1000))
 
     def _load_dataset(self) -> Tuple[Dataset, Dataset, Dataset]:
         '''Loads a dataset.
@@ -272,6 +271,12 @@ class AudioDataset:
         examples['input_values'] = [
             self.processor(audio_array, sampling_rate=sampling_rate)
                 .input_values[0]
+            for audio_array in audio_arrays
+        ]
+
+        # Add input_length column
+        examples['input_length'] = [
+            len(audio_array)
             for audio_array in audio_arrays
         ]
 
