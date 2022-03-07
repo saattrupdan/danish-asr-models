@@ -76,9 +76,9 @@ class AudioDataset:
         self.initialise_preprocessor()
 
         # Preprocess the datasets
-        self.train.map(self._preprocess, batched=True)
-        self.val.map(self._preprocess, batched=True)
-        self.test.map(self._preprocess, batched=True)
+        self.train.map(self._preprocess_one, batched=True)
+        self.val.map(self._preprocess_one, batched=True)
+        self.test.map(self._preprocess_one, batched=True)
 
         return self
 
@@ -245,6 +245,34 @@ class AudioDataset:
 
         # Return the preprocessed examples
         return examples
+
+    def _preprocess_one(self, example: dict) -> dict:
+        '''Preprocess the audio of an example.
+
+        Args:
+            examples (dict):
+                A dictionary containing the examples to preprocess.
+
+        Returns:
+            dict:
+                A dictionary containing the preprocessed examples.
+        '''
+        # Get the dictionary from the examples containing the audio data
+        audio = example['audio']
+
+        # Preprocess the audio
+        example['input_values'] = (
+            self.processor(audio['array'],
+                           sampling_rate=audio['sampling_rate'])
+                .input_values[0]
+        )
+
+        # Preprocess labels
+        with self.processor.as_target_processor():
+            example["labels"] = self.processor(example["sentence"]).input_ids
+
+        # Return the preprocessed examples
+        return example
 
     @staticmethod
     def _dump_vocabulary(dataset: Dataset):
