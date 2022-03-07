@@ -12,7 +12,7 @@ from typing import Optional, Tuple
 from pathlib import Path
 import json
 import re
-import torch
+import numpy as np
 
 
 class AudioDataset:
@@ -239,7 +239,9 @@ class AudioDataset:
 
         # Preprocess labels
         with self.processor.as_target_processor():
-            examples["labels"] = self.processor(examples["sentence"]).input_ids
+            examples["labels"] = np.asarray(
+                self.processor(examples["sentence"]).input_ids
+            )
 
         # Return the preprocessed examples
         return examples
