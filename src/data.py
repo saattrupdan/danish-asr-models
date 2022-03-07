@@ -76,17 +76,27 @@ class AudioDataset:
         self.initialise_preprocessor()
 
         # Tokenize the transcriptions
-        #self.train = self.train.map(self._tokenize_examples,
-        #                            load_from_cache_file=False)
-        #self.val = self.val.map(self._tokenize_examples,
-        #                        load_from_cache_file=False)
-        #self.test = self.test.map(self._tokenize_examples,
-        #                          load_from_cache_file=False)
+        self.train = self.train.map(self._tokenize_examples,
+                                    load_from_cache_file=False)
+        self.val = self.val.map(self._tokenize_examples,
+                                load_from_cache_file=False)
+        self.test = self.test.map(self._tokenize_examples,
+                                  load_from_cache_file=False)
+
+        self.train = self.train.map(self._preprocess,
+                                    batched=True,
+                                    load_from_cache_file=False)
+        self.val = self.val.map(self._preprocess,
+                                batched=True,
+                                load_from_cache_file=False)
+        self.test = self.test.map(self._preprocess,
+                                  batched=True,
+                                  load_from_cache_file=False)
 
         # Preprocess the datasets
-        self.train.set_transform(self._preprocess)
-        self.val.set_transform(self._preprocess)
-        self.test.set_transform(self._preprocess)
+        #self.train.set_transform(self._preprocess)
+        #self.val.set_transform(self._preprocess)
+        #self.test.set_transform(self._preprocess)
 
         return self
 
@@ -252,7 +262,6 @@ class AudioDataset:
             dict:
                 A dictionary containing the preprocessed examples.
         '''
-        print(examples)
         # Get the dictionary from the examples containing the audio data
         audio_arrays = [audio['array'] for audio in examples['audio']]
 
