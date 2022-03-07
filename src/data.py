@@ -248,6 +248,9 @@ class AudioDataset:
         with self.processor.as_target_processor():
             examples["labels"] = self.processor(examples["sentence"]).input_ids
 
+        # Add input_length column
+        examples['input_length'] = [len(toks) for toks in examples['labels']]
+
         return examples
 
     def _preprocess(self, examples: dict) -> dict:
@@ -271,12 +274,6 @@ class AudioDataset:
         examples['input_values'] = [
             self.processor(audio_array, sampling_rate=sampling_rate)
                 .input_values[0]
-            for audio_array in audio_arrays
-        ]
-
-        # Add input_length column
-        examples['input_length'] = [
-            len(audio_array)
             for audio_array in audio_arrays
         ]
 
