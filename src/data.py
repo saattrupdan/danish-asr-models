@@ -249,7 +249,7 @@ class AudioDataset:
             examples["labels"] = self.processor(examples["sentence"]).input_ids
 
         # Add input_length column
-        examples['input_length'] = [len(toks) for toks in examples['labels']]
+        examples['input_length'] = len(examples['labels'])
 
         return examples
 
