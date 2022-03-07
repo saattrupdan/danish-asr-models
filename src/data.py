@@ -75,6 +75,14 @@ class AudioDataset:
         # Intitialise the preprocessor
         self.initialise_preprocessor()
 
+        # Tokenize the transcriptions
+        self.train = self.train.map(self._tokenize_examples,
+                                    load_from_cache_file=False)
+        self.val = self.val.map(self._tokenize_examples,
+                                load_from_cache_file=False)
+        self.test = self.test.map(self._tokenize_examples,
+                                  load_from_cache_file=False)
+
         # Preprocess the datasets
         self.train.set_transform(self._preprocess)
         self.val.set_transform(self._preprocess)
@@ -199,7 +207,8 @@ class AudioDataset:
 
         return train, val, test
 
-    def _clean_examples(self, examples: dict) -> dict:
+    @staticmethod
+    def _clean_examples(examples: dict) -> dict:
         '''Cleans the transcription of an example.
 
         Args:
@@ -213,6 +222,19 @@ class AudioDataset:
         # Clean the transcription
         examples['sentence'] = clean_transcription(examples['sentence'])
 
+        return examples
+
+    def _tokenize_examples(self, examples: dict) -> dict:
+        '''Tokenizes the transcription of an example.
+
+        Args:
+            examples (dict):
+                A dictionary containing the examples to preprocess.
+
+        Returns:
+            dict:
+                A dictionary containing the cleaned transcription.
+        '''
         # Preprocess labels
         with self.processor.as_target_processor():
             examples["labels"] = self.processor(examples["sentence"]).input_ids
