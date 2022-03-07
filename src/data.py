@@ -234,8 +234,8 @@ class AudioDataset:
                 .input_values[0]
             for audio in audios
         ]
-        examples['input_length'] = [len(tokens)
-                                    for tokens in examples['input_values']]
+        examples['input_length'] = len(examples['input_values'])
+        print(examples['input_length'])
 
         # Preprocess labels
         with self.processor.as_target_processor():
