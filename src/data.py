@@ -264,9 +264,6 @@ class AudioDataset:
 
         examples["input_length"] = len(examples["input_values"])
 
-        with self.processor.as_target_processor():
-            examples["labels"] = self.processor(examples["sentence"]).input_ids
-
         # Return the preprocessed examples
         return examples
 
