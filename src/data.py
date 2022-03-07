@@ -253,7 +253,6 @@ class AudioDataset:
                 A dictionary containing the preprocessed examples.
         '''
         # Get the dictionary from the examples containing the audio data
-        print(examples)
         audio_arrays = [audio['array'] for audio in examples['audio']]
 
         # Get the sampling rate
