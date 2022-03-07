@@ -76,9 +76,9 @@ class AudioDataset:
         self.initialise_preprocessor()
 
         # Preprocess the datasets
-        self.train = self.train.set_transform(self._preprocess)
-        self.val = self.val.set_transform(self._preprocess)
-        self.test = self.test.set_transform(self._preprocess)
+        self.train.set_transform(self._preprocess)
+        self.val.set_transform(self._preprocess)
+        self.test.set_transform(self._preprocess)
 
         return self
 
