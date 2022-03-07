@@ -239,9 +239,7 @@ class AudioDataset:
 
         # Preprocess labels
         with self.processor.as_target_processor():
-            examples["labels"] = np.stack(
-                self.processor(examples["sentence"]).input_ids
-            )
+            examples["labels"] = self.processor(examples["sentence"]).input_ids
 
         # Return the preprocessed examples
         return examples
