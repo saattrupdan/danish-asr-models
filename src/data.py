@@ -12,6 +12,7 @@ from typing import Optional, Tuple
 from pathlib import Path
 import json
 import re
+import torch
 
 
 class AudioDataset:
@@ -228,24 +229,23 @@ class AudioDataset:
         audios = examples['audio']
 
         # Preprocess the audio
-        examples['input_values'] = [
+        examples['input_values'] = torch.stack([
             self.processor(audio['array'],
                            sampling_rate=audio['sampling_rate'])
                 .input_values
             for audio in audios
-        ]
+        ], dim=0)
 
         # Add feature with the input length
-        examples['input_length'] = [len(tokens)
-                                    for tokens in examples['input_values']]
-
-        # Deal with size one batches
-        if len(examples['input_values']) == 1:
-            examples['input_values'] = examples['input_values'][0]
+        examples['length'] = torch.tensor(
+            [len(tokens) for tokens in examples['input_values']]
+        )
 
         # Preprocess labels
         with self.processor.as_target_processor():
-            examples["labels"] = self.processor(examples["sentence"]).input_ids
+            examples["labels"] = torch.tensor(
+                self.processor(examples["sentence"]).input_ids
+            )
 
         # Return the preprocessed examples
         return examples
