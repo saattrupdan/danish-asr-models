@@ -267,6 +267,8 @@ class AudioDataset:
                 .input_values[0]
         )
 
+        example['length'] = len(example['input_values'])
+
         # Preprocess labels
         with self.processor.as_target_processor():
             example["labels"] = self.processor(example["sentence"]).input_ids
