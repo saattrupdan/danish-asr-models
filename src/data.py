@@ -229,23 +229,19 @@ class AudioDataset:
         audios = examples['audio']
 
         # Preprocess the audio
-        examples['input_values'] = torch.stack([
-            torch.tensor(self.processor(audio['array'],
-                                        sampling_rate=audio['sampling_rate'])
-                             .input_values)
+        examples['input_values'] = [
+            self.processor(audio['array'],
+                           sampling_rate=audio['sampling_rate'])
+                .input_values
             for audio in audios
-        ], dim=0)
+        ]
 
         # Add feature with the input length
-        examples['length'] = torch.tensor(
-            [examples['input_values'].shape[-1]] * len(audios)
-        )
+        examples['length'] = [len(vals) for vals in examples['input_values']]
 
         # Preprocess labels
         with self.processor.as_target_processor():
-            examples["labels"] = torch.tensor(
-                self.processor(examples["sentence"]).input_ids
-            )
+            examples["labels"] = self.processor(examples["sentence"]).input_ids
 
         # Return the preprocessed examples
         return examples
