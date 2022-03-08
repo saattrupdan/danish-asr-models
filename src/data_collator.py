@@ -72,5 +72,7 @@ class DataCollatorCTCWithPadding:
         # Update the batch labels
         batch['labels'] = labels
 
+        breakpoint()
+
         # Return the updated batch
         return batch
