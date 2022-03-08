@@ -89,12 +89,6 @@ class AudioDataset:
                                   keep_in_memory=True,
                                   load_from_cache_file=False)
 
-        # Set the format of the datasets, ensuring that columns won't be
-        # removed
-        # self.train.set_format(output_all_columns=True)
-        # self.val.set_format(output_all_columns=True)
-        # self.test.set_format(output_all_columns=True)
-
         return self
 
     def initialise_preprocessor(self):
@@ -154,7 +148,7 @@ class AudioDataset:
                                    split=split,
                                    use_auth_token=use_auth_token)
         except ValueError:
-            return DatasetDict.load_from_disk(dataset_id)[split].select(range(100))
+            return DatasetDict.load_from_disk(dataset_id)[split]
 
     def _load_dataset(self) -> Tuple[Dataset, Dataset, Dataset]:
         '''Loads a dataset.
@@ -249,33 +243,6 @@ class AudioDataset:
         examples['input_length'] = len(examples['labels'])
 
         return examples
-
-    # def _preprocess(self, examples: dict) -> dict:
-    #     '''Preprocess the audio of an example.
-
-    #     Args:
-    #         examples (dict):
-    #             A dictionary containing the examples to preprocess.
-
-    #     Returns:
-    #         dict:
-    #             A dictionary containing the preprocessed examples.
-    #     '''
-    #     # Get the dictionary from the examples containing the audio data
-    #     audio_arrays = [audio['array'] for audio in examples['audio']]
-
-    #     # Get the sampling rate
-    #     sampling_rate = examples['audio'][0]['sampling_rate']
-
-    #     # Preprocess the audio
-    #     examples['input_values'] = [
-    #         self.processor(audio_array, sampling_rate=sampling_rate)
-    #             .input_values[0]
-    #         for audio_array in audio_arrays
-    #     ]
-
-    #     # Return the preprocessed examples
-    #     return examples
 
     def _preprocess_one(self, example: dict) -> dict:
         '''Preprocess the audio of an example.

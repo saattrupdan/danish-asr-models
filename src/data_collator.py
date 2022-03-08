@@ -43,7 +43,6 @@ class DataCollatorCTCWithPadding:
             dict:
                 A dictionary of the collated features.
         '''
-        breakpoint()
         # Split inputs and labels since they have to be of different lenghts
         # and need different padding methods
         input_features = [{
