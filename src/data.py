@@ -57,10 +57,13 @@ class AudioDataset:
 
         # Clean the transcriptions
         self.train = self.train.map(self._clean_examples,
-                                    load_from_cache_file=False)
+                                    keep_in_memory=True,
+                                    load_from_cache_file=False,)
         self.val = self.val.map(self._clean_examples,
+                                keep_in_memory=True,
                                 load_from_cache_file=False)
         self.test = self.test.map(self._clean_examples,
+                                  keep_in_memory=True,
                                   load_from_cache_file=False)
 
         # Resample the audio
@@ -77,10 +80,13 @@ class AudioDataset:
 
         # Tokenize the transcriptions
         self.train = self.train.map(self._tokenize_examples,
+                                    keep_in_memory=True,
                                     load_from_cache_file=False)
         self.val = self.val.map(self._tokenize_examples,
+                                keep_in_memory=True,
                                 load_from_cache_file=False)
         self.test = self.test.map(self._tokenize_examples,
+                                  keep_in_memory=True,
                                   load_from_cache_file=False)
 
         #self.train = self.train.map(self._preprocess,
