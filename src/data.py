@@ -12,35 +12,6 @@ from typing import Optional, Tuple
 from pathlib import Path
 import json
 import re
-from functools import partial
-
-
-def _preprocess(examples: dict, processor) -> dict:
-    '''Preprocess the audio of an example.
-
-    Args:
-        examples (dict):
-            A dictionary containing the examples to preprocess.
-
-    Returns:
-        dict:
-            A dictionary containing the preprocessed examples.
-    '''
-    # Get the dictionary from the examples containing the audio data
-    audio_arrays = [audio['array'] for audio in examples['audio']]
-
-    # Get the sampling rate
-    sampling_rate = examples['audio'][0]['sampling_rate']
-
-    # Preprocess the audio
-    examples['input_values'] = [
-        processor(audio_array, sampling_rate=sampling_rate)
-            .input_values[0]
-        for audio_array in audio_arrays
-    ]
-
-    # Return the preprocessed examples
-    return examples
 
 
 class AudioDataset:
@@ -129,9 +100,9 @@ class AudioDataset:
         #                          load_from_cache_file=False)
 
         # Preprocess the datasets
-        self.train.set_transform(partial(_preprocess, processor=self.processor))
-        self.val.set_transform(partial(_preprocess, processor=self.processor))
-        self.test.set_transform(partial(_preprocess, processor=self.processor))
+        self.train.set_transform(self._preprocess)
+        self.val.set_transform(self._preprocess)
+        self.test.set_transform(self._preprocess)
 
         return self
 
