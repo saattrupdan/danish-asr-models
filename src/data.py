@@ -89,26 +89,11 @@ class AudioDataset:
                                   keep_in_memory=True,
                                   load_from_cache_file=False)
 
-        #self.train = self.train.map(self._preprocess,
-        #                            batched=True,
-        #                            load_from_cache_file=False)
-        #self.val = self.val.map(self._preprocess,
-        #                        batched=True,
-        #                        load_from_cache_file=False)
-        #self.test = self.test.map(self._preprocess,
-        #                          batched=True,
-        #                          load_from_cache_file=False)
-
-        # Preprocess the datasets
-        # self.train.set_transform(self._preprocess)
-        # self.val.set_transform(self._preprocess)
-        # self.test.set_transform(self._preprocess)
-
         # Set the format of the datasets, ensuring that columns won't be
         # removed
-        self.train.set_format(output_all_columns=True)
-        self.val.set_format(output_all_columns=True)
-        self.test.set_format(output_all_columns=True)
+        # self.train.set_format(output_all_columns=True)
+        # self.val.set_format(output_all_columns=True)
+        # self.test.set_format(output_all_columns=True)
 
         return self
 
