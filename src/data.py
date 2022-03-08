@@ -104,6 +104,12 @@ class AudioDataset:
         self.val.set_transform(self._preprocess)
         self.test.set_transform(self._preprocess)
 
+        # Set the format of the datasets, ensuring that columns won't be
+        # removed
+        self.train.set_format(output_all_columns=True)
+        self.val.set_format(output_all_columns=True)
+        self.test.set_format(output_all_columns=True)
+
         return self
 
     def initialise_preprocessor(self):

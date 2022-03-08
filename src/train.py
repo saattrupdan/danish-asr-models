@@ -126,8 +126,6 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
     # Save the preprocessor
     dataset.processor.save_pretrained(config.finetuned_model_id.split('/')[-1])
 
-    breakpoint()
-
     # Train the model
     trainer.train(resume_from_checkpoint=config.resume_from_checkpoint)
 
