@@ -43,11 +43,16 @@ class DataCollatorCTCWithPadding:
             dict:
                 A dictionary of the collated features.
         '''
-        breakpoint()
         # Split inputs and labels since they have to be of different lenghts
         # and need different padding methods
-        input_features = [{'input_values': feature['input_values']}
-                          for feature in features]
+        input_features = [{
+            'input_values':
+                self.processor(feature['audio']['array'],
+                               sampling_rate=feature['audio']['sampling_rate'])
+                    .input_values[0]
+            }
+            for feature in features
+        ]
         label_features = [{'input_ids': feature['labels']}
                           for feature in features]
 

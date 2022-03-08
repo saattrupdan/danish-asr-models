@@ -100,9 +100,9 @@ class AudioDataset:
         #                          load_from_cache_file=False)
 
         # Preprocess the datasets
-        self.train.set_transform(self._preprocess)
-        self.val.set_transform(self._preprocess)
-        self.test.set_transform(self._preprocess)
+        # self.train.set_transform(self._preprocess)
+        # self.val.set_transform(self._preprocess)
+        # self.test.set_transform(self._preprocess)
 
         # Set the format of the datasets, ensuring that columns won't be
         # removed
@@ -265,32 +265,32 @@ class AudioDataset:
 
         return examples
 
-    def _preprocess(self, examples: dict) -> dict:
-        '''Preprocess the audio of an example.
+    # def _preprocess(self, examples: dict) -> dict:
+    #     '''Preprocess the audio of an example.
 
-        Args:
-            examples (dict):
-                A dictionary containing the examples to preprocess.
+    #     Args:
+    #         examples (dict):
+    #             A dictionary containing the examples to preprocess.
 
-        Returns:
-            dict:
-                A dictionary containing the preprocessed examples.
-        '''
-        # Get the dictionary from the examples containing the audio data
-        audio_arrays = [audio['array'] for audio in examples['audio']]
+    #     Returns:
+    #         dict:
+    #             A dictionary containing the preprocessed examples.
+    #     '''
+    #     # Get the dictionary from the examples containing the audio data
+    #     audio_arrays = [audio['array'] for audio in examples['audio']]
 
-        # Get the sampling rate
-        sampling_rate = examples['audio'][0]['sampling_rate']
+    #     # Get the sampling rate
+    #     sampling_rate = examples['audio'][0]['sampling_rate']
 
-        # Preprocess the audio
-        examples['input_values'] = [
-            self.processor(audio_array, sampling_rate=sampling_rate)
-                .input_values[0]
-            for audio_array in audio_arrays
-        ]
+    #     # Preprocess the audio
+    #     examples['input_values'] = [
+    #         self.processor(audio_array, sampling_rate=sampling_rate)
+    #             .input_values[0]
+    #         for audio_array in audio_arrays
+    #     ]
 
-        # Return the preprocessed examples
-        return examples
+    #     # Return the preprocessed examples
+    #     return examples
 
     def _preprocess_one(self, example: dict) -> dict:
         '''Preprocess the audio of an example.
