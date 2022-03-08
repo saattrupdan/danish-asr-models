@@ -99,7 +99,7 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
         metric_for_best_model='wer',
         greater_is_better=False,
         seed=4242,
-        remove_unused_columns=True
+        remove_unused_columns=False
     )
 
     # Create early stopping callback
