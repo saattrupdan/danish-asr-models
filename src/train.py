@@ -181,7 +181,7 @@ if __name__ == '__main__':
         gradient_accumulation_steps=32,
         learning_rate=1e-4,
         warmup_steps=2000,
-        epochs=50,
+        epochs=3,
     )
 
     train(ftspeech_config)
