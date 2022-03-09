@@ -154,5 +154,8 @@ def build_and_store_data(input_path: Union[Path, str] = 'data/ftspeech_raw',
 
 
 if __name__ == '__main__':
-    build_and_store_data(input_path='/media/secure/dan/ftspeech/ftspeech_raw',
-                         output_path='/media/secure/dan/ftspeech/ftspeech')
+    #build_and_store_data(input_path='/media/secure/dan/ftspeech/ftspeech_raw',
+    #                     output_path='/media/secure/dan/ftspeech/ftspeech')
+
+    ftspeech = DatasetDict.load_from_disk('/media/secure/dan/ftspeech/ftspeech')
+    ftspeech.push_to_hub('saattrupdan/ftspeech', private=True)
