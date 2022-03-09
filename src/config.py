@@ -12,9 +12,8 @@ class Config(BaseModel):
             The model id of the pretrained model to finetune.
         finetuned_model_id (str):
             The model id of the finetuned model.
-        dataset_id (str, optional):
-            The id of the dataset to finetune on. Defaults to
-            'mozilla-foundation/common_voice_8_0'.
+        dataset_id (str):
+            The id of the dataset to finetune on.
         dataset_subset (str or None, optional):
             The subset of the dataset to finetune on. If None then no subset
             will be used. Defaults to 'da'.
@@ -84,8 +83,8 @@ class Config(BaseModel):
     finetuned_model_id: str
 
     # Dataset hyperparameters
-    dataset_id: str = 'mozilla-foundation/common_voice_8_0'
-    dataset_subset: Optional[str] = 'da'
+    dataset_id: str
+    dataset_subset: Optional[str] = None
     sampling_rate: int = 16_000
     train_name: str = 'train'
     validation_name: Optional[str] = 'validation'

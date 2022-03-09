@@ -141,23 +141,31 @@ def train(config: Optional[Union[dict, Config]] = None, **kwargs):
 if __name__ == '__main__':
 
     xlsr_300m_config = Config(
+        dataset_id='mozilla-foundation/common_voice_8_0',
+        dataset_subset='da',
         pretrained_model_id='facebook/wav2vec2-xls-r-300m',
         finetuned_model_id='saattrupdan/wav2vec2-xls-r-300m-cv8-da',
     )
 
     alvenir_config = Config(
+        dataset_id='mozilla-foundation/common_voice_8_0',
+        dataset_subset='da',
         pretrained_model_id='Alvenir/wav2vec2-base-da',
         finetuned_model_id='saattrupdan/alvenir-wav2vec2-base-cv8-da',
         final_dropout=0.3
     )
 
     voxrex_config = Config(
+        dataset_id='mozilla-foundation/common_voice_8_0',
+        dataset_subset='da',
         pretrained_model_id='KBLab/wav2vec2-large-voxrex',
         finetuned_model_id='saattrupdan/kblab-voxrex-wav2vec2-large-cv8-da',
         final_dropout=0.3
     )
 
     voxpopuli_config = Config(
+        dataset_id='mozilla-foundation/common_voice_8_0',
+        dataset_subset='da',
         pretrained_model_id='facebook/wav2vec2-large-sv-voxpopuli',
         finetuned_model_id='saattrupdan/voxpopuli-wav2vec2-large-cv8-da',
         final_dropout=0.3
@@ -165,7 +173,6 @@ if __name__ == '__main__':
 
     ftspeech_config = Config(
         dataset_id='/media/secure/dan/ftspeech/ftspeech',
-        dataset_subset=None,
         validation_name='dev_balanced',
         test_name='test_balanced',
         pretrained_model_id='facebook/wav2vec2-xls-r-300m',
