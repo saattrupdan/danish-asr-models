@@ -182,6 +182,13 @@ if __name__ == '__main__':
         learning_rate=1e-4,
         warmup_steps=2000,
         epochs=3,
+        activation_dropout=0.,
+        attention_dropout=0.,
+        hidden_dropout=0.,
+        feat_proj_dropout=0.,
+        final_dropout=0.,
+        mask_feature_prob=0.,
+        layerdrop=0.,
     )
 
     train(ftspeech_config)
