@@ -69,10 +69,16 @@ def evaluate(model_id: str,
         processor = Wav2Vec2Processor.from_pretrained(model_id)
     else:
         try:
-            processor = Wav2Vec2ProcessorWithLM.from_pretrained(model_id)
+            processor = Wav2Vec2ProcessorWithLM.from_pretrained(
+                model_id,
+                use_auth_token=True
+            )
         except (FileNotFoundError, ValueError):
-            processor = Wav2Vec2Processor.from_pretrained(model_id)
-    model = Wav2Vec2ForCTC.from_pretrained(model_id)
+            processor = Wav2Vec2Processor.from_pretrained(
+                model_id,
+                use_auth_token=True
+            )
+    model = Wav2Vec2ForCTC.from_pretrained(model_id, use_auth_token=True)
 
     # Preprocess the dataset
     preprocess_fn = partial(preprocess, processor=processor)
@@ -140,15 +146,15 @@ def preprocess(examples: dict,
             A dictionary containing the preprocessed examples.
     '''
     # Get the dictionary from the examples containing the audio data
-    audio = examples['audio']
+    #audio = examples['audio']
 
-    # Preprocess the audio
-    examples['input_values'] = (
-        processor(audio['array'],
-                       sampling_rate=audio['sampling_rate'])
-            .input_values[0]
-    )
-    examples['input_length'] = len(examples['input_values'])
+    ## Preprocess the audio
+    #examples['input_values'] = (
+    #    processor(audio['array'],
+    #                   sampling_rate=audio['sampling_rate'])
+    #        .input_values[0]
+    #)
+    #examples['input_length'] = len(examples['input_values'])
 
     # Preprocess labels
     examples['labels'] = processor.tokenizer.encode(list(examples['sentence']))

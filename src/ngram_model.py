@@ -39,7 +39,7 @@ def train_ngram_model(model_id: str,
 
     # Load the dataset
     try:
-        dataset = load_dataset(dataset_id, split=split)
+        dataset = load_dataset(dataset_id, split=split, use_auth_token=True)
     except ValueError:
         dataset = Dataset.from_file(f'{dataset_id}/dataset.arrow')
 
@@ -104,7 +104,7 @@ def train_ngram_model(model_id: str,
             ngram_path.unlink()
 
     # Load the pretrained processor
-    processor = AutoProcessor.from_pretrained(model_id)
+    processor = AutoProcessor.from_pretrained(model_id, use_auth_token=True)
 
     # Extract the vocabulary, which will be used to build the CTC decoder
     vocab_dict = processor.tokenizer.get_vocab()
