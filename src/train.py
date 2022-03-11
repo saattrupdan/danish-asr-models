@@ -189,6 +189,7 @@ if __name__ == '__main__':
         final_dropout=0.,
         mask_feature_prob=0.,
         layerdrop=0.,
+        early_stopping_patience=20
     )
 
     train(ftspeech_config)
