@@ -149,5 +149,5 @@ def train_ngram_model(model_id: str,
 
 
 if __name__ == '__main__':
-    train_ngram_model('saattrupdan/wav2vec2-xls-r-300m-cv8-da',
+    train_ngram_model('saattrupdan/wav2vec2-xls-r-300m-ftspeech',
                       dataset_id='data/lexdk-preprocessed')
