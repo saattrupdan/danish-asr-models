@@ -60,7 +60,10 @@ def evaluate(model_id: str,
 
     # Load the pretrained processor and model
     if no_lm:
-        processor = Wav2Vec2Processor.from_pretrained(model_id)
+        processor = Wav2Vec2Processor.from_pretrained(
+            model_id,
+            use_auth_token=True
+        )
     else:
         try:
             processor = Wav2Vec2ProcessorWithLM.from_pretrained(
