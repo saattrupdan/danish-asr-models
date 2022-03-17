@@ -103,8 +103,6 @@ def evaluate(model_id: str,
     # Remove trainer logging
     trainer.log = lambda _: None
 
-    breakpoint()
-
     # Evaluate the model
     metrics = trainer.evaluate(dataset)
 
