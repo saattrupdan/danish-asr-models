@@ -328,7 +328,7 @@ def clean_transcription(doc: str) -> str:
         'ñ': 'n',
         'ń': 'n',
         'è': 'e',
-        'μ': 'm',
+        'μ': 'mikro',
         '§': ' paragraf ',
         '‰': ' promille ',
         'ú': 'u',
@@ -351,6 +351,21 @@ def clean_transcription(doc: str) -> str:
         'ö': 'ø',
         'ç': 'c',
         'ș': 's',
+        '(?<![0-9])(18|19|20)([0-9]{2})(?![0-9])': '\1 \2',
+        '1000': ' tusind ',
+        '[2-9]000': ' \1 tusind',
+        '100': ' hundrede ',
+        '[2-9]00': ' \1 hundrede',
+        '(?<![0-9])([0-9])([0-9])(?![0-9])': '\2 og \1\0',
+        '10': ' ti ',
+        '20': ' tyve ',
+        '30': ' tredive ',
+        '40': ' fyrre ',
+        '50': ' halvtreds ',
+        '60': ' treds ',
+        '70': ' halvfjerds ',
+        '80': ' firs ',
+        '90': ' halvfems ',
         '0': ' nul ',
         '1': ' et ',
         '2': ' to ',
@@ -363,7 +378,7 @@ def clean_transcription(doc: str) -> str:
         '9': ' ni ',
     }
     for key, value in conversion_dict.items():
-        doc = doc.replace(key, value)
+        doc = re.sub(key, value, doc)
 
     # Remove empty whitespace
     doc = re.sub(u'\u0301', ' ', doc)
