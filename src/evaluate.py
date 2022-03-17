@@ -57,13 +57,6 @@ def evaluate(model_id: str,
     except ValueError:
         dataset = Dataset.from_file(f'{dataset_id}/dataset.arrow')
 
-     # Clean the transcriptions
-    dataset = dataset.map(clean_examples)
-
-    # Resample the audio
-    audio = Audio(sampling_rate=sampling_rate)
-    dataset = dataset.cast_column('audio', audio)
-
     # Load the pretrained processor and model
     if no_lm:
         processor = Wav2Vec2Processor.from_pretrained(model_id)
@@ -80,9 +73,16 @@ def evaluate(model_id: str,
             )
     model = Wav2Vec2ForCTC.from_pretrained(model_id, use_auth_token=True)
 
-    # Preprocess the dataset
-    preprocess_fn = partial(preprocess, processor=processor)
-    dataset = dataset.map(preprocess_fn)
+     # Clean the transcriptions
+    dataset = dataset.map(clean_examples)
+
+    # Tokenize the transcriptions
+    tokenize_fn = partial(tokenize_examples, processor=processor)
+    dataset = dataset.map(tokenize_fn)
+
+    # Resample the audio
+    audio = Audio(sampling_rate=sampling_rate)
+    dataset = dataset.cast_column('audio', audio)
 
     # Initialise data collator
     data_collator = DataCollatorCTCWithPadding(processor=processor,
@@ -131,9 +131,9 @@ def clean_examples(examples: dict) -> dict:
     return examples
 
 
-def preprocess(examples: dict,
+def tokenize_examples(examples: dict,
                processor: Wav2Vec2Processor) -> dict:
-    '''Preprocess the audio of an example.
+    '''Tokenize the transcriptions of an example.
 
     Args:
         examples (dict):
