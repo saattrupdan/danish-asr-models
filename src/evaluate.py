@@ -3,6 +3,7 @@
 from transformers import (Wav2Vec2Processor,
                           Wav2Vec2ProcessorWithLM,
                           Wav2Vec2ForCTC,
+                          TrainingArguments,
                           Trainer)
 import transformers.utils.logging as tf_logging
 from datasets import load_dataset as ds_load_dataset
@@ -90,6 +91,7 @@ def evaluate(model_id: str,
 
     # Initialise the trainer
     trainer = Trainer(
+        args=TrainingArguments('.', remove_unused_columns=False),
         model=model,
         data_collator=data_collator,
         compute_metrics=partial(compute_metrics, processor=processor),
