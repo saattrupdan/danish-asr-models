@@ -74,12 +74,9 @@ def evaluate(model_id: str,
             )
     model = Wav2Vec2ForCTC.from_pretrained(model_id, use_auth_token=True)
 
-     # Clean the transcriptions
-    dataset = dataset.map(clean_examples)
-
-    # Tokenize the transcriptions
-    tokenize_fn = partial(tokenize_examples, processor=processor)
-    dataset = dataset.map(tokenize_fn)
+     # Clean and tokenize the transcriptions
+    preprocess_fn = partial(preprocess_transcriptions, processor=processor)
+    dataset = dataset.map(preprocess_fn)
 
     # Resample the audio
     audio = Audio(sampling_rate=sampling_rate)
@@ -116,26 +113,9 @@ def evaluate(model_id: str,
     print(f'{model_id} achieved a WER of {wer:.2f}.\n')
 
 
-def clean_examples(examples: dict) -> dict:
-    '''Cleans the transcription of an example.
-
-    Args:
-        examples (dict):
-            A dictionary containing the examples to preprocess.
-
-    Returns:
-        dict:
-            A dictionary containing the cleaned transcription.
-    '''
-    # Clean the transcription
-    examples['sentence'] = clean_transcription(examples['sentence'])
-
-    return examples
-
-
-def tokenize_examples(examples: dict,
-               processor: Wav2Vec2Processor) -> dict:
-    '''Tokenize the transcriptions of an example.
+def preprocess_transcriptions(examples: dict,
+                              processor: Wav2Vec2Processor) -> dict:
+    '''Clean and Tokenize the transcriptions of an example.
 
     Args:
         examples (dict):
@@ -147,6 +127,9 @@ def tokenize_examples(examples: dict,
         dict:
             A dictionary containing the preprocessed examples.
     '''
+    # Clean the transcription
+    examples['sentence'] = clean_transcription(examples['sentence'])
+
     # Preprocess labels
     examples['labels'] = processor.tokenizer.encode(list(examples['sentence']))
 
