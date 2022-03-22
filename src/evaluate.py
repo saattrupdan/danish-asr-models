@@ -70,7 +70,8 @@ def evaluate(model_id: str,
                 model_id,
                 use_auth_token=True
             )
-        except (FileNotFoundError, ValueError):
+        except (FileNotFoundError, ValueError) as e:
+            raise e
             processor = Wav2Vec2Processor.from_pretrained(
                 model_id,
                 use_auth_token=True
