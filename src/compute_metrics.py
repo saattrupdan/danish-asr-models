@@ -46,8 +46,15 @@ def compute_metrics(pred: EvalPrediction,
     if isinstance(processor, Wav2Vec2ProcessorWithLM):
         try:
             pred_str = processor.batch_decode(pred_logits).text
+
+        # This error occurs when there are too few logits compared to the size
+        # of the vocabulary. We fix this by simply adding zero logits padding
+        # to match the size of the vocabulary.
         except ValueError:
-            breakpoint()
+            vocab_size = processor.tokenizer.get_vocab()
+            mismatch_dim = len(vocab_size - pred_logits.shape[-1])
+            pred_logits = np.pad(pred_logits,
+                                 ((0, 0), (0, 0), (0, mismatch_dim)))
             pred_str = processor.batch_decode(pred_logits).text
     else:
         pred_ids = np.argmax(pred_logits, axis=-1)
