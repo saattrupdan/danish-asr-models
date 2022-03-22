@@ -44,7 +44,11 @@ def compute_metrics(pred: EvalPrediction,
 
     # Decode the predictions, to get the transcriptions
     if isinstance(processor, Wav2Vec2ProcessorWithLM):
-        pred_str = processor.batch_decode(pred_logits).text
+        try:
+            pred_str = processor.batch_decode(pred_logits).text
+        except:
+            breakpoint()
+            pred_str = processor.batch_decode(pred_logits).text
     else:
         pred_ids = np.argmax(pred_logits, axis=-1)
         pred_str = processor.batch_decode(pred_ids)
