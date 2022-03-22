@@ -151,7 +151,6 @@ def train_ngram_model(model_id: str,
 if __name__ == '__main__':
     model_ids = [
         'saattrupdan/alvenir-wav2vec2-base-cv8-da',
-        'saattrupdan/voxpopuli-wav2vec2-large-cv8-da',
     ]
     for model_id in model_ids:
         train_ngram_model(model_id, dataset_id='data/lexdk-preprocessed')
