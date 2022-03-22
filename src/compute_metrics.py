@@ -53,8 +53,6 @@ def compute_metrics(pred: EvalPrediction,
     label_str = processor.tokenizer.batch_decode(pred.label_ids,
                                                  group_tokens=False)
 
-    print(f'Processor type: {type(processor)}')
-
     import itertools as it
     for label, pred in it.islice(zip(label_str, pred_str), 10):
         print()
