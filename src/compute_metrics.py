@@ -52,7 +52,7 @@ def compute_metrics(pred: EvalPrediction,
         # to match the size of the vocabulary.
         except ValueError:
             vocab_size = processor.tokenizer.get_vocab()
-            mismatch_dim = len(vocab_size - pred_logits.shape[-1])
+            mismatch_dim = len(vocab_size) - pred_logits.shape[-1]
             pred_logits = np.pad(pred_logits,
                                  ((0, 0), (0, 0), (0, mismatch_dim)))
             pred_str = processor.batch_decode(pred_logits).text
