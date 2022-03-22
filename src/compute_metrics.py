@@ -46,7 +46,7 @@ def compute_metrics(pred: EvalPrediction,
     if isinstance(processor, Wav2Vec2ProcessorWithLM):
         try:
             pred_str = processor.batch_decode(pred_logits).text
-        except:
+        except ValueError:
             breakpoint()
             pred_str = processor.batch_decode(pred_logits).text
     else:
