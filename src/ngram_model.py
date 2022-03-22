@@ -150,7 +150,6 @@ def train_ngram_model(model_id: str,
 
 if __name__ == '__main__':
     model_ids = [
-        'saattrupdan/kblab-voxrex-wav2vec2-large-cv8-da',
         'saattrupdan/alvenir-wav2vec2-base-cv8-da',
         'saattrupdan/voxpopuli-wav2vec2-large-cv8-da',
     ]

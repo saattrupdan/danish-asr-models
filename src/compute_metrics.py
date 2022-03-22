@@ -42,6 +42,8 @@ def compute_metrics(pred: EvalPrediction,
     pad_arr = pred.predictions[:, :, pad_token]
     pred.predictions[:, :, pad_token] = np.where(pad_arr == -100, 100, pad_arr)
 
+    breakpoint()
+
     # Decode the predictions, to get the transcriptions
     if isinstance(processor, Wav2Vec2ProcessorWithLM):
         pred_str = processor.batch_decode(pred_logits).text
